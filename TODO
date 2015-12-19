@@ -1,0 +1,17 @@
+Posto radim u visaul studio uploadovo sam cijeli projekt iz njeg (ne solution nego projekt ima razlika)
+pa eto lakse bi bilo da radimo svi u visual studio pa kasnije port napravit ako neko ima volje
+
+Nisam jos nista konkretno napravio, ima bruka posla pa eto ko hoce
+
+Struktura zasad:
+ - Charakter klasa reprezentuje karakter tj. zasad main karakter
+ - IController je interfejs koji cemo koristit za kontroliranje entitija
+ - KeyController je implementacija IControllera koju koristimo za main karakter tj. keyboardom se kontrolise
+ 
+Sada kako bi trebali dalje ic, razmisljo sam da li je bolja enkapsulacija ili inheritance i zasad
+mislim da je lakse i vjerovatno cak i efikasnija enkapsulacija tako da nesto sto bi se ko moglo pravit sljedece
+su klase za enemije i likove i one bi ko trebale enkapsulirat Character klasu, ne naslijedjivat
+Onda trebamo se govorit sta ce sve od skilova postojat, moramo i iteme napravit, inventory
+sve se za to mogu napravit POCO klase koje ne trebaju zasad sprite reprezentaciju (spritove takodje enkapsuliramo, ne naslijedjujemo)
+Takodje sam razmisljo koristenje factory patterna kao oblik enkapsulacije, al o tom potom ima milion nacina da napravimo da valja
+vidicemo
