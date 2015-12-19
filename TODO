@@ -7,6 +7,8 @@ Struktura zasad:
  - Charakter klasa reprezentuje karakter tj. zasad main karakter
  - IController je interfejs koji cemo koristit za kontroliranje entitija
  - KeyController je implementacija IControllera koju koristimo za main karakter tj. keyboardom se kontrolise
+ - HUD kaze samo za sebe sta radi, u njoj mozemo odma gotov neki hud napravit sa tekstovima ili ako sta bude bolje
+ - Camera htio sam je odma napravit posto camera zna bit pegla, uglavnom za nju treba sf::View
  
 Sada kako bi trebali dalje ic, razmisljo sam da li je bolja enkapsulacija ili inheritance i zasad
 mislim da je lakse i vjerovatno cak i efikasnija enkapsulacija tako da nesto sto bi se ko moglo pravit sljedece
