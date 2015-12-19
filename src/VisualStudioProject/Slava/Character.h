@@ -4,6 +4,7 @@
 #define CHARACTER_H
 #include <SFML\Graphics.hpp>
 #include "IController.h"
+#include "Stats.h"
 
 namespace slava
 {
@@ -15,37 +16,44 @@ namespace slava
 	private:
 		sf::Texture* texture;
 		sf::Sprite* sprite;
+
 		double vX;
 		double vY;
-		double acceleration = 0.5;
+
+		Stats* stats;
+
 		// Ogranicenje za ubrzanje da ne bi u beskonacnost ubrzavo
 		const double limit = 2;
-		// level ide po 0.25 napredak pa cemo mnozit sa nekim stvarima, lakse nego kompleksno levelovanje
-		double level;
+		
+		
 		IController* controller;
 
 	public:
 
 		Character();
 		Character(sf::Texture*);
+		void init();
+		Stats* getStats();
+		sf::Sprite* getSprite();
+		void setStats(Stats*);
 
-		void set_texture(sf::Texture*);
+		void setTexture(sf::Texture*);
 		void draw(sf::RenderWindow&);
 
-		void move_left();
-		void move_right();
-		void move_down();
-		void move_up();
-		void stop_up();
-		void stop_down();
-		void stop_left();
-		void stop_right();
+		void moveLeft();
+		void moveRight();
+		void moveDown();
+		void moveUp();
+		void stopUp();
+		void stopDown();
+		void stopLeft();
+		void stopRight();
 
-		void level_up();
-		void set_controller(IController*);
+		void levelUp();
+		void setController(IController*);
 		void control();
 
-		sf::Texture* get_texture();
+		sf::Texture* getTexture();
 		~Character();
 	};
 

@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "Stats.h"
 #define MIN(a, b) a > b? b: a
 #define MAX(a, b) a > b? a: b
 
@@ -6,24 +7,46 @@ slava::Character::~Character() {
 	delete sprite;
 	delete texture;
 	delete controller;
+	delete stats;
+}
+
+void slava::Character::init() {
+	vX = 0;
+	vY = 0;
+	stats = new Stats;
+	stats->acceleration = 0.5;
+	stats->health = 1;
+	stats->level = 1;
+	stats->sp = 0;
 }
 
 slava::Character::Character() {
 	sprite = new sf::Sprite();
-	vX = 0;
-	vY = 0;
-	level = 1;
+	init();
 }
 
 slava::Character::Character(sf::Texture* text) {
 	sprite = new sf::Sprite();
 	sprite->setTexture(*text);
-	vX = 0;
-	vY = 0;
-	level = 1;
+	init();
 }
 
-void slava::Character::set_controller(IController* controller) {
+slava::Stats* slava::Character::getStats() {
+	return stats;
+}
+
+sf::Sprite* slava::Character::getSprite() {
+	return this->sprite;
+}
+
+void slava::Character::setStats(Stats* stats) {
+	if (this->stats != NULL) {
+		delete this->stats;
+	}
+	this->stats = stats;
+}
+
+void slava::Character::setController(IController* controller) {
 	this->controller = controller;
 }
 
@@ -31,12 +54,12 @@ void slava::Character::control() {
 	controller->control(this);
 }
 
-void slava::Character::set_texture(sf::Texture* text) {
+void slava::Character::setTexture(sf::Texture* text) {
 	texture = text;
 	sprite->setTexture(*texture);
 }
 
-sf::Texture* slava::Character::get_texture() {
+sf::Texture* slava::Character::getTexture() {
 	return texture;
 }
 
@@ -45,40 +68,40 @@ void slava::Character::draw(sf::RenderWindow& win) {
 	win.draw(*sprite, getTransform());
 }
 
-void slava::Character::stop_up() {
+void slava::Character::stopUp() {
 	if (vY < 0) vY = 0;
 }
 
-void slava::Character::stop_down() {
+void slava::Character::stopDown() {
 	if (vY > 0) vY = 0;
 }
 
-void slava::Character::stop_right() {
+void slava::Character::stopRight() {
 	if (vX > 0) vX = 0;
 }
 
-void slava::Character::stop_left() {
+void slava::Character::stopLeft() {
 	if (vX < 0) vX = 0;
 }
 
-void slava::Character::move_right() {
-	vX = MIN(((vX > 0) ? vX : -vX) + acceleration, limit * level);
+void slava::Character::moveRight() {
+	vX = MIN(((vX > 0) ? vX : -vX) + stats->acceleration, limit * stats->level);
 }
 
-void slava::Character::move_left() {
-	vX = MAX(((vX > 0) ? -vX : vX) - acceleration, -limit * level);
+void slava::Character::moveLeft() {
+	vX = MAX(((vX > 0) ? -vX : vX) - stats->acceleration, -limit * stats->level);
 }
 
-void slava::Character::move_down() {
-	vY = MIN(((vY > 0) ? vY : -vY) + acceleration, limit * level);
+void slava::Character::moveDown() {
+	vY = MIN(((vY > 0) ? vY : -vY) + stats->acceleration, limit * stats->level);
 }
 
-void slava::Character::move_up() {
-	vY = MAX(((vY > 0) ? -vY : vY) - acceleration, -limit * level);
+void slava::Character::moveUp() {
+	vY = MAX(((vY > 0) ? -vY : vY) - stats->acceleration, -limit * stats->level);
 }
 
-void slava::Character::level_up() {
-	level += 0.25;
+void slava::Character::levelUp() {
+	stats->level += 0.25;
 }
 
 sf::Texture* slava::load_texture(const char* path) {

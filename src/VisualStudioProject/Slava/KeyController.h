@@ -16,31 +16,31 @@ namespace slava
 		void control(Character* character) {
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				character->move_down();
+				character->moveDown();
 			}
 			else {
-				character->stop_down();
+				character->stopDown();
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				character->move_up();
+				character->moveUp();
 			}
 			else {
-				character->stop_up();
+				character->stopUp();
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				character->move_right();
+				character->moveRight();
 			}
 			else {
-				character->stop_right();
+				character->stopRight();
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				character->move_left();
+				character->moveLeft();
 			}
 			else {
-				character->stop_left();
+				character->stopLeft();
 			}
 		}
 	};

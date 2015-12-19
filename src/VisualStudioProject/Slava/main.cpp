@@ -2,21 +2,38 @@
 #include <memory>
 #include "Character.h"
 #include "KeyController.h"
+#include "HUD.h"
+#include "Camera.h"
 
 using namespace std;
 using namespace slava;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1024, 640), "Slava");
+	sf::RenderWindow window(sf::VideoMode(1000, 600), "Slava");
 	window.setVerticalSyncEnabled(true);
 
 	auto character = make_shared<Character>();
-	character->set_texture(slava::load_texture("Main-Character.png"));
-	character->set_controller(new KeyController());
+	character->setTexture(slava::load_texture("Main-Character.png"));
+	character->setController(new KeyController());
+	character->getStats()->health = 0.5;
+	character->getStats()->sp = 20000;
+
+	HUD hud(character->getStats(), "sgs.ttf");
+	Camera cam(character->getSprite());
+	cam.setAcceleration(2);
+	cam.setOffset(200, 100);
+	sf::View customView(sf::FloatRect(0, 0, 1000, 600));
+	cam.bindHUD(&hud);
+
+	sf::CircleShape shape(50);
+	shape.setPosition(400, 20);
+	shape.setFillColor(sf::Color(100, 250, 50));
 	
 	while (window.isOpen())
 	{
+		cam.update(customView);
+		// customView.setCenter(character->getSprite()->getPosition());
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -24,40 +41,15 @@ int main()
 				window.close();
 
 			character->control();
-			/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				character->move_down();
-			}
-			else {
-				character->stop_down();
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				character->move_up();
-			}
-			else {
-				character->stop_up();
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				character->move_right();
-			}
-			else {
-				character->stop_right();
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				character->move_left();
-			}
-			else {
-				character->stop_left();
-			}*/
-			
 			
 
 		}
 
 		window.clear();
+		window.draw(shape);
 		character->draw(window);
+		hud.draw(window);
+		window.setView(customView);
 		window.display();
 	}
 
