@@ -79,12 +79,17 @@ std::shared_ptr<sf::Texture> slava::Character::getTexture() {
 
 void slava::Character::draw(sf::RenderWindow& win) {
 
-	if (std::time(0) - lastTimeHit < 1) {
-		sprite->setColor(sf::Color::Red);
+	if (clock.getElapsedTime() > sf::milliseconds(500) && hit) {
+		sprite->setColor(sf::Color::White);
+		hit = false;
+		// clock.restart();
 	}
+	/*
 	else {
 		sprite->setColor(originalColor);
-	}
+		hit = false;
+		// clock.restart();
+	}*/
 
 	sprite->move(static_cast<float>(vX), static_cast<float>(vY));
 	win.draw(*sprite, getTransform());
@@ -154,7 +159,10 @@ bool slava::Character::isDead() {
 }
 
 void slava::Character::gotHit() {
-	lastTimeHit = std::time(0);
+	clock.restart();
+	hit = true;
+	sprite->setColor(sf::Color::Red);
+	// lastTimeHit = clock.getElapsedTime();
 }
 
 void slava::Character::addAnimation(Animation& anim) {

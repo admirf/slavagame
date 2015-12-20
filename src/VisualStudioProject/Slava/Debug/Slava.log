@@ -1,25 +1,10 @@
-﻿Build started 12/20/2015 11:00:15 PM.
+﻿Build started 12/20/2015 11:43:01 PM.
      1>Project "C:\Users\admir\documents\visual studio 2015\Projects\Slava\Slava\Slava.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\Users\admir\Downloads\SFML-2.3.2\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Animation.cpp Character.cpp EnemyController.cpp main.cpp
-         main.cpp
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemyfactory.h(19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-         Animation.cpp
-         Generating Code...
-         Compiling...
-         EnemyController.cpp
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(16): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(17): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(19): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(20): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(22): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(23): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(25): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(26): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\Users\admir\Downloads\SFML-2.3.2\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Character.cpp
          Character.cpp
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\character.cpp(165): warning C4018: '>=': signed/unsigned mismatch
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\character.cpp(170): warning C4018: '>=': signed/unsigned mismatch
-         Generating Code...
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\character.cpp(174): warning C4018: '>=': signed/unsigned mismatch
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\character.cpp(179): warning C4018: '>=': signed/unsigned mismatch
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\Debug\Slava.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\admir\Downloads\SFML-2.3.2\lib" "sfml-graphics-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\Debug\Slava.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\Debug\Slava.lib" /MACHINE:X86 Debug\Animation.obj
          Debug\Camera.obj
@@ -32,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.78
+Time Elapsed 00:00:01.54

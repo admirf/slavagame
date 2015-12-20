@@ -26,7 +26,8 @@ namespace slava
 		double vX;
 		double vY;
 
-		std::time_t lastTimeHit;
+		sf::Clock clock;
+		bool hit = false;
 
 		Stats* stats;
 
