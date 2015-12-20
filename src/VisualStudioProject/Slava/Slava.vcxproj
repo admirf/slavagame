@@ -125,12 +125,15 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="EnemyFactory.h" />
+    <ClInclude Include="EnemyController.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="IController.h" />
     <ClInclude Include="KeyController.h" />

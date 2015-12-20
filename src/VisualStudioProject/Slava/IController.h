@@ -1,4 +1,3 @@
-#pragma once
 #ifndef ICONTROLLER_H
 #define ICONTROLLER_H
 #include "Character.h"

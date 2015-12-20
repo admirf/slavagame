@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "Stats.h"
+#include <memory>
 #define MIN(a, b) a > b? b: a
 #define MAX(a, b) a > b? a: b
 
@@ -28,6 +29,7 @@ slava::Character::Character() {
 slava::Character::Character(sf::Texture* text) {
 	sprite = new sf::Sprite();
 	sprite->setTexture(*text);
+	originalColor = sprite->getColor();
 	init();
 }
 
@@ -57,6 +59,7 @@ void slava::Character::control() {
 void slava::Character::setTexture(sf::Texture* text) {
 	texture = text;
 	sprite->setTexture(*texture);
+	originalColor = sprite->getColor();
 }
 
 sf::Texture* slava::Character::getTexture() {
@@ -64,6 +67,14 @@ sf::Texture* slava::Character::getTexture() {
 }
 
 void slava::Character::draw(sf::RenderWindow& win) {
+
+	if (std::time(0) - lastTimeHit < 1) {
+		sprite->setColor(sf::Color::Red);
+	}
+	else {
+		sprite->setColor(originalColor);
+	}
+
 	sprite->move(static_cast<float>(vX), static_cast<float>(vY));
 	win.draw(*sprite, getTransform());
 }
@@ -102,6 +113,37 @@ void slava::Character::moveUp() {
 
 void slava::Character::levelUp() {
 	stats->level += 0.25;
+}
+
+void slava::Character::addCollidableCharacter(std::shared_ptr<Character> other) {
+	otherCharacters.push_back(other);
+}
+
+bool slava::Character::collision(std::shared_ptr<Character> other) {
+	if (this->sprite->getGlobalBounds().intersects(other->getSprite()->getGlobalBounds())) {
+		return true;
+	}
+	return false;
+}
+
+bool slava::Character::notColliding() {
+	for (auto others : otherCharacters) {
+		if (this->collision(others)) return false;
+	}
+	return true;
+}
+
+void slava::Character::clearCollidableCharacters() {
+	this->otherCharacters.clear();
+}
+
+bool slava::Character::isDead() {
+	if (this->stats->health < 0) return true;
+	return false;
+}
+
+void slava::Character::gotHit() {
+	lastTimeHit = std::time(0);
 }
 
 sf::Texture* slava::load_texture(const char* path) {

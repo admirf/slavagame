@@ -1,10 +1,10 @@
-#pragma once
-
 #ifndef CHARACTER_H
 #define CHARACTER_H
 #include <SFML\Graphics.hpp>
 #include "IController.h"
 #include "Stats.h"
+#include <vector>
+#include <memory>
 
 namespace slava
 {
@@ -16,20 +16,23 @@ namespace slava
 	private:
 		sf::Texture* texture;
 		sf::Sprite* sprite;
+		sf::Color originalColor;
+		std::vector< std::shared_ptr<Character> > otherCharacters;
 
 		double vX;
 		double vY;
 
+		std::time_t lastTimeHit;
+
 		Stats* stats;
 
 		// Ogranicenje za ubrzanje da ne bi u beskonacnost ubrzavo
-		const double limit = 2;
-		
 		
 		IController* controller;
 
 	public:
-
+		bool isAttack;
+		double limit = 2;
 		Character();
 		Character(sf::Texture*);
 		void init();
@@ -48,6 +51,13 @@ namespace slava
 		void stopDown();
 		void stopLeft();
 		void stopRight();
+		bool isDead();
+		void gotHit();
+		
+		bool collision(std::shared_ptr<Character>);
+		void addCollidableCharacter(std::shared_ptr<Character>);
+		void clearCollidableCharacters();
+		bool notColliding();
 
 		void levelUp();
 		void setController(IController*);
