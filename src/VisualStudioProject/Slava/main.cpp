@@ -18,12 +18,20 @@ int main()
 	window.setKeyRepeatEnabled(true);
 
 	auto character = make_shared<Character>();
-	character->setTexture(slava::load_texture("Main-Character.png"));
+	character->setTexture(slava::loadTexture("Main-Character.png"));
 	character->setController(new KeyController());
 	character->getStats()->health = 0.5;
 	character->getStats()->sp = 20000;
 
+	// animacija udaranja
+	vector<shared_ptr<sf::Texture>> textures;
+	textures.push_back(slava::loadTexture("main_cha_hit.png"));
+	// textures.push_back(slava::loadTexture("Main-Character.png"));
+	Animation anim(textures, sf::milliseconds(180));
+	character->addAnimation(anim);
+
 	auto enemy = EnemyFactory::createBasicEnemy(character, 200, 400);
+	enemy->addAnimation(anim);
 
 	// character->addCollidableCharacter(enemy);
 
@@ -56,10 +64,14 @@ int main()
 
 			
 			character->control();
+			character->updateAnimation(0);
 			enemy->control();
+			enemy->updateAnimation(0);
 			
 
 		}
+		character->updateAnimation(0);
+		enemy->updateAnimation(0);
 		// cout << character->isHit << endl;
 		window.clear();
 		window.draw(shape);

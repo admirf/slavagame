@@ -1,14 +1,25 @@
 #include "Character.h"
 #include "Stats.h"
 #include <memory>
+#include <iostream>
 #define MIN(a, b) a > b? b: a
 #define MAX(a, b) a > b? a: b
 
 slava::Character::~Character() {
 	delete sprite;
-	delete texture;
+	// delete texture;
 	delete controller;
 	delete stats;
+	// Napomena: Ubuduce odma koristit smart pointere a ne kurcit ko kompleksas sa etfa sa rucnim oslobadjanjem
+	/*for (auto& anim : animations) {
+		for (int i = 0; i < anim.getTextures().size(); ++i) {
+			if (anim.getTextures()[i] != NULL) {
+				delete anim.getTextures()[i];
+				anim.getTextures()[i] = NULL;
+			}
+		}
+		// anim.getTextures().clear();
+	}*/
 }
 
 void slava::Character::init() {
@@ -56,13 +67,13 @@ void slava::Character::control() {
 	controller->control(this);
 }
 
-void slava::Character::setTexture(sf::Texture* text) {
+void slava::Character::setTexture(std::shared_ptr<sf::Texture> text) {
 	texture = text;
 	sprite->setTexture(*texture);
 	originalColor = sprite->getColor();
 }
 
-sf::Texture* slava::Character::getTexture() {
+std::shared_ptr<sf::Texture> slava::Character::getTexture() {
 	return texture;
 }
 
@@ -146,8 +157,23 @@ void slava::Character::gotHit() {
 	lastTimeHit = std::time(0);
 }
 
-sf::Texture* slava::load_texture(const char* path) {
-	sf::Texture* tx = new sf::Texture();
+void slava::Character::addAnimation(Animation& anim) {
+	anim.setAnimated(this);
+	this->animations.push_back(anim);
+}
+
+void slava::Character::playAnimation(int n) {
+	if (n >= animations.size()) return;
+	animations[n].play();
+}
+
+void slava::Character::updateAnimation(int n) {
+	if (n >= animations.size()) return;
+	animations[n].update();
+}
+
+std::shared_ptr<sf::Texture> slava::loadTexture(const char* path) {
+	auto tx = std::make_shared<sf::Texture>();
 	if (!tx->loadFromFile(path)) {
 		return NULL;
 	}

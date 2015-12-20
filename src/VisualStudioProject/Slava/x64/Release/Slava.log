@@ -1,0 +1,25 @@
+﻿Build started 12/20/2015 10:16:05 PM.
+     1>Project "C:\Users\admir\documents\visual studio 2015\Projects\Slava\Slava\Slava.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Users\admir\Downloads\SFML-2.3.2-x64\SFML-2.3.2\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Release\\" /Fd"x64\Release\vc140.pdb" /Gd /TP /errorReport:prompt main.cpp
+         main.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\EnemyFactory.h(19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>main.cpp(30): warning C4244: 'argument': conversion from 'double' to 'time_t', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\x64\Release\Slava.exe" /NOLOGO /LIBPATH:"C:\Users\admir\Downloads\SFML-2.3.2-x64\SFML-2.3.2\lib" "sfml-graphics.lib" "sfml-window.lib" "sfml-system.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\x64\Release\Slava.pdb" /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\x64\Release\Slava.lib" /MACHINE:X64 x64\Release\Animation.obj
+         x64\Release\Camera.obj
+         x64\Release\Character.obj
+         x64\Release\EnemyController.obj
+         x64\Release\HUD.obj
+         x64\Release\main.obj
+         Generating code
+         177 of 430 functions (41.2%) were compiled, the rest were copied from previous compilation.
+           145 functions were new in current compilation
+           4 functions had inline decision re-evaluated but remain unchanged
+         Finished generating code
+         Slava.vcxproj -> C:\Users\admir\documents\visual studio 2015\Projects\Slava\x64\Release\Slava.exe
+     1>Done Building Project "C:\Users\admir\documents\visual studio 2015\Projects\Slava\Slava\Slava.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.18

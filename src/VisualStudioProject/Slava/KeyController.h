@@ -59,6 +59,7 @@ namespace slava
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 				if (clock.getElapsedTime().asMilliseconds() > ATTACK_LENGTH) {
+					character->playAnimation(0);
 					character->isAttack = true;
 					sf::Time t1 = clock.restart();
 					// character->hit();

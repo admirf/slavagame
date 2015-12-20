@@ -58,6 +58,7 @@ void slava::EnemyController::control(Character* enemy) {
 	if (dist  <= 20 && !hit) {
 		
 		hit = true;
+		enemy->playAnimation(0);
 		this->player->getStats()->health -= 0.05;
 		enemy->moveUp();
 		lastHit = std::time(0);

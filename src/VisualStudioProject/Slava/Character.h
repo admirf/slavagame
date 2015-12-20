@@ -3,18 +3,22 @@
 #include <SFML\Graphics.hpp>
 #include "IController.h"
 #include "Stats.h"
+#include "Animation.h"
 #include <vector>
 #include <memory>
 
 namespace slava
 {
-
-	sf::Texture* load_texture(const char*);
+	class Animation;
+	std::shared_ptr<sf::Texture> loadTexture(const char*);
 
 	class Character : sf::Transformable
 	{
 	private:
-		sf::Texture* texture;
+
+		std::vector<Animation> animations;
+
+		std::shared_ptr<sf::Texture> texture;
 		sf::Sprite* sprite;
 		sf::Color originalColor;
 		std::vector< std::shared_ptr<Character> > otherCharacters;
@@ -40,8 +44,11 @@ namespace slava
 		sf::Sprite* getSprite();
 		void setStats(Stats*);
 
-		void setTexture(sf::Texture*);
+		void setTexture(std::shared_ptr<sf::Texture>);
 		void draw(sf::RenderWindow&);
+		void addAnimation(Animation&);
+		void playAnimation(int);
+		void updateAnimation(int);
 
 		void moveLeft();
 		void moveRight();
@@ -63,7 +70,7 @@ namespace slava
 		void setController(IController*);
 		void control();
 
-		sf::Texture* getTexture();
+		std::shared_ptr<sf::Texture> getTexture();
 		~Character();
 	};
 

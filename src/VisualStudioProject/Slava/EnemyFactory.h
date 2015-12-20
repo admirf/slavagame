@@ -15,7 +15,7 @@ namespace slava
 			auto enemy = std::make_shared<Character>();
 			enemy->setController(controller);
 			enemy->limit = 1.2;
-			enemy->setTexture(slava::load_texture("Main-Character.png"));
+			enemy->setTexture(slava::loadTexture("Main-Character.png"));
 			enemy->getSprite()->setPosition(x, y);
 			return enemy;
 		}

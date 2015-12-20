@@ -1,0 +1,20 @@
+﻿Build started 12/20/2015 8:08:53 PM.
+     1>Project "C:\Users\admir\documents\visual studio 2015\Projects\Slava\Slava\Slava.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt Camera.cpp Character.cpp EnemyController.cpp HUD.cpp main.cpp
+         main.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\main.cpp(1): fatal error C1083: Cannot open include file: 'SFML/Graphics.hpp': No such file or directory
+         HUD.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\hud.h(4): fatal error C1083: Cannot open include file: 'SFML\Graphics.hpp': No such file or directory
+         EnemyController.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\character.h(3): fatal error C1083: Cannot open include file: 'SFML\Graphics.hpp': No such file or directory
+         Character.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\character.h(3): fatal error C1083: Cannot open include file: 'SFML\Graphics.hpp': No such file or directory
+         Camera.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\camera.h(3): fatal error C1083: Cannot open include file: 'SFML\Graphics.hpp': No such file or directory
+         Generating Code...
+     1>Done Building Project "C:\Users\admir\documents\visual studio 2015\Projects\Slava\Slava\Slava.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.97
