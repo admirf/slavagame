@@ -1,11 +1,36 @@
-﻿Build started 12/21/2015 8:37:14 PM.
+﻿Build started 12/21/2015 10:23:26 PM.
      1>Project "C:\Users\admir\documents\visual studio 2015\Projects\Slava\Slava\Slava.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\Users\admir\Downloads\SFML-2.3.2\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt HUD.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\Users\admir\Downloads\SFML-2.3.2\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Animation.cpp Camera.cpp Character.cpp EnemyController.cpp HUD.cpp main.cpp
          HUD.cpp
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\hud.cpp(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\hud.cpp(32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\hud.cpp(39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\hud.cpp(26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\hud.cpp(33): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\hud.cpp(40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+         EnemyController.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(20): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(21): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(24): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(25): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(28): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(29): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(31): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemycontroller.cpp(32): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+         Generating Code...
+         Compiling...
+         main.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\enemyfactory.h(21): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+         Character.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\character.cpp(207): warning C4018: '>=': signed/unsigned mismatch
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\character.cpp(212): warning C4018: '>=': signed/unsigned mismatch
+         Camera.cpp
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\camera.cpp(32): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\camera.cpp(33): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\camera.cpp(35): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\camera.cpp(36): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\camera.cpp(70): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\admir\documents\visual studio 2015\projects\slava\slava\camera.cpp(73): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+         Animation.cpp
+         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\Debug\Slava.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\admir\Downloads\SFML-2.3.2\lib" "sfml-graphics-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\Debug\Slava.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\admir\documents\visual studio 2015\Projects\Slava\Debug\Slava.lib" /MACHINE:X86 Debug\Animation.obj
          Debug\Camera.obj
@@ -18,4 +43,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.01
+Time Elapsed 00:00:19.81

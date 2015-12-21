@@ -5,6 +5,7 @@
 #include "HUD.h"
 #include "Camera.h"
 #include "EnemyFactory.h"
+#include "Utility.h"
 #include <iostream>
 
 using namespace std;
@@ -18,21 +19,21 @@ int main()
 	window.setKeyRepeatEnabled(true);
 
 	auto character = make_shared<Character>();
-	character->setTexture(slava::loadTexture("Main-Character.png"));
+	character->setTexture(loadTexture("Main-Character.png"));
 	character->setController(new KeyController());
 	character->getStats()->health = 0.5;
 	character->getStats()->sp = 20000;
 
 	// animacija udaranja
 	vector<shared_ptr<sf::Texture>> textures;
-	textures.push_back(slava::loadTexture("main_cha_hit.png"));
-	// textures.push_back(slava::loadTexture("Main-Character.png"));
+	textures.push_back(loadTexture("main_cha_hit.png"));
+	// textures.push_back(loadTexture("Main-Character.png"));
 	Animation anim(textures, sf::milliseconds(180));
 	character->addAnimation(anim);
 
 	/* // animacija hodanja
 	vector<shared_ptr<sf::Texture>> texturesAnim2;
-	texturesAnim2.push_back(slava::loadTexture);*/
+	texturesAnim2.push_back(loadTexture);*/
 
 	auto enemy = EnemyFactory::createBasicEnemy(character, 200, 400);
 	enemy->addAnimation(anim);

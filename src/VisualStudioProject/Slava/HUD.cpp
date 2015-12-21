@@ -1,5 +1,5 @@
 #include "HUD.h"
-#include "Utility.h"
+
 
 slava::HUD::HUD(Stats* stats, const char* path) {
 	this->stats = stats;
@@ -16,6 +16,7 @@ void slava::HUD::setPosition(int x, int y) {
 }
 
 void slava::HUD::draw(sf::RenderWindow& win) {
+
 	sf::Text health_text;
 	health_text.setFont(font);
 	std::string s;

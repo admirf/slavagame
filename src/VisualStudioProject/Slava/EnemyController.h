@@ -1,10 +1,15 @@
 #ifndef ENEMY_CONTROLLER_H
 #define ENEMY_CONTROLLER_H
+
 #include <memory>
 #include "Character.h"
 
 namespace slava
 {
+
+	/*
+	Implementacija IController koja bi ko trebala da sadrzi mehaniku i AI ponasanja enemija, Idi na EnemyController.cpp da objasnim malo detaljnije
+	*/
 
 	class EnemyController: public virtual IController
 	{
@@ -15,7 +20,7 @@ namespace slava
 		bool hit = false;
 
 	public:
-		time_t reattack;
+		sf::Time reattack;
 		EnemyController(std::shared_ptr<Character>);
 		void control(Character*);
 	};

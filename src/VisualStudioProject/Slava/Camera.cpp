@@ -1,5 +1,8 @@
 #include "Camera.h"
+#include "HUD.h"
 #include <iostream>
+#include <SFML\Graphics.hpp>
+
 #define ABS(x) x < 0? -x: x
 
 slava::Camera::Camera(sf::Sprite* sprite) {

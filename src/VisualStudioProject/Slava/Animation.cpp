@@ -1,5 +1,5 @@
+#include "Character.h"
 #include "Animation.h"
-#include <iostream>
 
 slava::Animation::Animation(std::vector<std::shared_ptr<sf::Texture> >& frames, sf::Time time) {
 	this->frames = frames;
@@ -19,7 +19,6 @@ void slava::Animation::play() {
 	if (!set) return;
 	
 	if (!started) {
-		std::cout << "Triggered";
 		started = true;
 		this->animated->getSprite()->setTexture(*frames[0]);
 		clock.restart();

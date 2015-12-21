@@ -1,10 +1,12 @@
 #ifndef ICONTROLLER_H
 #define ICONTROLLER_H
-#include "Character.h"
 
 namespace slava
 {
 	class Character;
+
+	// Interfejs koji definise kontrolere, kao argument control metodi ide karakter koji se kontrolise,
+	// Kontrolere uvijek koristiti u kombinaciji sa Characterom tako sto proslijedite referencu kontrolera Character instanci
 
 	class IController
 	{

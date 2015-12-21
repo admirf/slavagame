@@ -1,10 +1,23 @@
 #ifndef CAMERA_H
 #define CAMERA_H
-#include <SFML\Graphics.hpp>
-#include "HUD.h"
+
+namespace sf
+{
+	class Sprite;
+	class View;
+}
 
 namespace slava
 {
+	class HUD;
+
+	/*
+	Kamera uzima sprite referencu kao argument (proslijedi se getSprite() karaktera) i ona prati onda taj sprite
+	ostale opcije su da se stave offseti, tj da se tek nakon odredjenog predjenog puta karaktera kamera opet centrira na njeg
+	takodjer je potrebno (ne znam vise jel potrebno ili nije) da se poveze kamera sa HUD-om (heads up display)
+	da bi se HUD crto na poziciji kamere, moze se takodjer postavit ubrzanje kamere kada centrira na karakter
+	Da bi kamera radila, posto je ona samo fancy wrapper za sf::View mora se u main loopu pozivat update(sf::View&)
+	*/
 
 	class Camera
 	{

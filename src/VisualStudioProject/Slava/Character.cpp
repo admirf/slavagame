@@ -42,7 +42,7 @@ slava::Character::Character() {
 slava::Character::Character(sf::Texture* text) {
 	sprite = new sf::Sprite();
 	sprite->setTexture(*text);
-	originalColor = sprite->getColor();
+	// originalColor = sprite->getColor();
 	init();
 }
 
@@ -72,7 +72,7 @@ void slava::Character::control() {
 void slava::Character::setTexture(std::shared_ptr<sf::Texture> text) {
 	texture = text;
 	sprite->setTexture(*texture);
-	originalColor = sprite->getColor();
+	// originalColor = sprite->getColor();
 }
 
 std::shared_ptr<sf::Texture> slava::Character::getTexture() {
@@ -156,6 +156,8 @@ void slava::Character::levelUp() {
 	stats->level += 0.25;
 }
 
+/* Nadajmo se da nikad nece trebat
+
 void slava::Character::addCollidableCharacter(std::shared_ptr<Character> other) {
 	otherCharacters.push_back(other);
 }
@@ -177,6 +179,7 @@ bool slava::Character::notColliding() {
 void slava::Character::clearCollidableCharacters() {
 	this->otherCharacters.clear();
 }
+*/
 
 bool slava::Character::isDead() {
 	if (this->stats->health < 0) return true;
@@ -210,13 +213,3 @@ void slava::Character::updateAnimation(int n) {
 	animations[n].update();
 }
 
-std::shared_ptr<sf::Texture> slava::loadTexture(const char* path) {
-	auto tx = std::make_shared<sf::Texture>();
-	if (!tx->loadFromFile(path)) {
-		return NULL;
-	}
-	// tx->loadFromFile(path);
-	tx->setSmooth(true);
-
-	return tx;
-}

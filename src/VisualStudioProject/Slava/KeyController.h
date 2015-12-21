@@ -1,5 +1,6 @@
-#ifndef KEYCONTROLLER_H
-#define KEYCONTROLLER_H
+#ifndef KEY_CONTROLLER_H
+#define KEY_CONTROLLER_H
+
 #include "IController.h"
 #include "Character.h"
 #include <SFML\Graphics.hpp>
@@ -7,6 +8,9 @@
 
 namespace slava
 {
+
+	// KeyController klasa je implementacija IController interfejsa, kao sto ime kaze ovdje implementiramo
+	// mehaniku kontrole main charactera tastaturom
 
 	class KeyController : virtual public IController
 	{
@@ -16,13 +20,15 @@ namespace slava
 	public:
 		// ~KeyController() {};
 
+		// Evo je control metoda
 		void control(Character* character) {
 
+			// Regeneracija healtha u ovisnosti levela igraca
 			if (character->getStats()->health < 1) {
 				character->getStats()->health += 0.0001 * character->getStats()->level;
 			}
 			
-
+			// Obicna kontrola kretnje, ako tipka nije stisnuta treba zaustavljat karakter u tom smjeru
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 				character->moveDown();
 			}
@@ -51,12 +57,19 @@ namespace slava
 				character->stopLeft();
 			}
 
+
+			// ATTACK_LENGTH je duzina u milisekundama koliko traje napad
+			// Ako je proslo to vrijeme stavljamo da karakter nije u Attack modu
 			if (clock.getElapsedTime().asMilliseconds() > ATTACK_LENGTH) {
 				character->isAttack = false;
 				// sf::Time t1 = clock.restart();
 				// character->hit();
 			}
 
+			// Ako je igrac stisnuo space i vrijeme od proslog napada je isteklo
+			// Igramo animaciju udarca koja je indexirana na nuli
+			// Stavljamo da je character u Attack modu
+			// restartujemo sat koji mjeri vrijeme od zadnjeg napada
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 				if (clock.getElapsedTime().asMilliseconds() > ATTACK_LENGTH) {
 					character->playAnimation(0);
