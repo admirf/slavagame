@@ -30,6 +30,10 @@ int main()
 	Animation anim(textures, sf::milliseconds(180));
 	character->addAnimation(anim);
 
+	/* // animacija hodanja
+	vector<shared_ptr<sf::Texture>> texturesAnim2;
+	texturesAnim2.push_back(slava::loadTexture);*/
+
 	auto enemy = EnemyFactory::createBasicEnemy(character, 200, 400);
 	enemy->addAnimation(anim);
 

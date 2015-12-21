@@ -1,5 +1,7 @@
 #include "Character.h"
 #include "Stats.h"
+#include <ctime>
+#include <cstdlib>
 #include <memory>
 #include <iostream>
 #define MIN(a, b) a > b? b: a
@@ -82,6 +84,7 @@ void slava::Character::draw(sf::RenderWindow& win) {
 	if (clock.getElapsedTime() > sf::milliseconds(500) && hit) {
 		sprite->setColor(sf::Color::White);
 		hit = false;
+		this->getStats()->hit = false;
 		// clock.restart();
 	}
 	/*
@@ -109,6 +112,28 @@ void slava::Character::stopRight() {
 
 void slava::Character::stopLeft() {
 	if (vX < 0) vX = 0;
+}
+
+void slava::Character::moveRandom() {
+	srand(static_cast<unsigned>(time(0)));
+	int r = rand() % 4;
+
+	switch (r) {
+	case 0:
+		this->moveLeft();
+		break;
+	case 1:
+		this->moveRight();
+		break;
+	case 2:
+		this->moveUp();
+		break;
+	case 3:
+		this->moveDown();
+		break;
+	default:
+		this->moveRandom();
+	}
 }
 
 void slava::Character::moveRight() {
@@ -158,10 +183,15 @@ bool slava::Character::isDead() {
 	return false;
 }
 
-void slava::Character::gotHit() {
+void slava::Character::gotHit(bool isMainCharacter) {
 	clock.restart();
 	hit = true;
-	sprite->setColor(sf::Color::Red);
+	if (!isMainCharacter) {
+		sprite->setColor(sf::Color::Red);
+	}
+	else {
+		this->getStats()->hit = true;
+	}
 	// lastTimeHit = clock.getElapsedTime();
 }
 

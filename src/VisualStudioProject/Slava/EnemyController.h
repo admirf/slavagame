@@ -10,7 +10,8 @@ namespace slava
 	{
 	private:
 		std::shared_ptr<Character> player;
-		time_t lastHit = 0;
+		// sf::Time lastHit;
+		sf::Clock clock1;
 		bool hit = false;
 
 	public:

@@ -51,6 +51,7 @@ namespace slava
 		void playAnimation(int);
 		void updateAnimation(int);
 
+		void moveRandom();
 		void moveLeft();
 		void moveRight();
 		void moveDown();
@@ -60,7 +61,7 @@ namespace slava
 		void stopLeft();
 		void stopRight();
 		bool isDead();
-		void gotHit();
+		void gotHit(bool);
 		
 		bool collision(std::shared_ptr<Character>);
 		void addCollidableCharacter(std::shared_ptr<Character>);

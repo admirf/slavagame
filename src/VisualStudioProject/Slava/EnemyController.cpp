@@ -25,7 +25,7 @@ void slava::EnemyController::control(Character* enemy) {
 	xTarget += player->getSprite()->getGlobalBounds().width / 2;
 	yTarget += player->getSprite()->getGlobalBounds().height / 2;
 
-	if (std::time(0) - lastHit > 2) {
+	if (clock1.getElapsedTime() > sf::milliseconds(1000)) {
 		hit = false;
 		if (x < xTarget) {
 			enemy->moveRight();
@@ -60,8 +60,9 @@ void slava::EnemyController::control(Character* enemy) {
 		hit = true;
 		enemy->playAnimation(0);
 		this->player->getStats()->health -= 0.05;
-		enemy->moveUp();
-		lastHit = std::time(0);
+		this->player->gotHit(true);
+		enemy->moveRandom();
+		clock1.restart();
 	
 	}
 
@@ -69,7 +70,7 @@ void slava::EnemyController::control(Character* enemy) {
 
 		enemy->getStats()->health -= this->player->getStats()->level * 0.01;
 
-		enemy->gotHit();
+		enemy->gotHit(false);
 
 		if (enemy->isDead()) {
 			this->player->getStats()->sp += 200;
@@ -79,6 +80,6 @@ void slava::EnemyController::control(Character* enemy) {
 		// enemy->gotHit();
 	}
 
-	std::cout << enemy->getStats()->health * 100 << std::endl;
+	// std::cout << enemy->getStats()->health * 100 << std::endl;
 
 }

@@ -33,4 +33,11 @@ void slava::HUD::draw(sf::RenderWindow& win) {
 	
 	win.draw(health_text);
 	win.draw(sp_text);
+
+	if (stats->hit) {
+		sf::RectangleShape rect(win.getDefaultView().getSize());
+		rect.setPosition(x, y);
+		rect.setFillColor(sf::Color(255, 0, 0, 50));
+		win.draw(rect);
+	}
 }
