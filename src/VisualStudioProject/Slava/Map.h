@@ -21,11 +21,14 @@ namespace slava
 	class Map
 	{
 	private:
+		sf::VertexArray array;
 		int blockSize;
 		RawMap map;
+		std::shared_ptr<sf::Texture> texture;
 	public:
-		Map(const char*, Textures, MapSize, int);
+		Map(const char*, std::shared_ptr<sf::Texture>, MapSize, int);
 		void draw(sf::RenderWindow& win);
+		std::shared_ptr<Block> blockAt(int, int);
 	};
 
 }

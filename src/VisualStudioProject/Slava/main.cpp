@@ -20,9 +20,9 @@ int main()
 
 	window.setKeyRepeatEnabled(true);
 
-	Textures texts = TileFactory::getTileTextures();
+	auto txt = loadTexture("tileset_1.png");
 
-	Map map("mapa1.txt", texts, getMapSize("mapa1.txt"), 16);
+	Map map("mapa1.txt", txt, getMapSize("mapa1.txt"), 16);
 
 	cout << "It reaches this" << endl;
 
@@ -35,7 +35,6 @@ int main()
 	// animacija udaranja
 	vector<shared_ptr<sf::Texture>> textures;
 	textures.push_back(loadTexture("main_cha_hit.png"));
-	// textures.push_back(loadTexture("Main-Character.png"));
 	Animation anim(textures, sf::milliseconds(180));
 	character->addAnimation(anim);
 
@@ -46,13 +45,12 @@ int main()
 	auto enemy = EnemyFactory::createBasicEnemy(character, 200, 400);
 	enemy->addAnimation(anim);
 
-	// character->addCollidableCharacter(enemy);
-
 	HUD hud(character->getStats(), "sgs.ttf");
 	Camera cam(character->getSprite());
 	cam.setAcceleration(2);
 	cam.setOffset(200, 100);
 	sf::View customView(sf::FloatRect(0, 0, 1000, 600));
+	// customView.zoom(0.7);
 	cam.bindHUD(&hud);
 
 	
@@ -90,6 +88,7 @@ int main()
 		character->draw(window);
 		
 		hud.draw(window);
+		
 		window.setView(customView);
 		window.display();
 	}

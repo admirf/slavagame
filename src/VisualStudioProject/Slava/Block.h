@@ -11,13 +11,13 @@ namespace slava
 	{
 	private:
 		std::shared_ptr<Tile> tile;
-		sf::Sprite* rect;
+		sf::VertexArray vertexArray;
+		int x, y;
 	public:
-		Block(std::shared_ptr<Tile>, std::shared_ptr<sf::Texture>);
-		~Block();
+		Block(std::shared_ptr<Tile>, int, int, int, int);
+		// ~Block();
 		std::shared_ptr<Tile> getTile();
-		void setPosition(int, int);
-		void draw(sf::RenderWindow&);
+		sf::VertexArray getVertexArray();
 	};
 
 }

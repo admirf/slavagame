@@ -14,7 +14,7 @@ namespace slava
 	class TileFactory
 	{
 	public:
-
+		/*
 		static Textures getTileTextures() {
 			Textures texts;
 			texts.push_back(loadTexture("resources/myTiles/0.png"));
@@ -30,7 +30,7 @@ namespace slava
 
 			return texts;
 
-		}
+		}*/
 
 		static std::shared_ptr<Tile> createTile0() {
 			auto tile0 = std::make_shared<Tile>();
