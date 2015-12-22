@@ -12,7 +12,7 @@ slava::Character::~Character() {
 	// delete texture;
 	delete controller;
 	delete stats;
-	// Napomena: Ubuduce odma koristit smart pointere a ne kurcit ko kompleksas sa etfa sa rucnim oslobadjanjem
+	// Napomena: Ubuduce odma koristit smart pointere 
 	/*for (auto& anim : animations) {
 		for (int i = 0; i < anim.getTextures().size(); ++i) {
 			if (anim.getTextures()[i] != NULL) {
@@ -213,3 +213,9 @@ void slava::Character::updateAnimation(int n) {
 	animations[n].update();
 }
 
+slava::Position slava::Character::getPositionOnTile(int tileSize) {
+	Position p;
+	p.x = this->sprite->getPosition().x / tileSize;
+	p.y = this->sprite->getPosition().y / tileSize;
+	return p;
+}

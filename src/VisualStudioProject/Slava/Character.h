@@ -29,6 +29,8 @@ namespace slava
 	za metodu playAnimation(), takodje bitno je ponavljam animacije se moraju update-ovat u main loopu pa se treba i pozivat updateAnimation(index)
 	*/
 
+	struct Position { int x; int y; };
+
 	class Character : sf::Transformable
 	{
 	private:
@@ -79,6 +81,7 @@ namespace slava
 		void stopRight();
 		bool isDead();
 		void gotHit(bool);
+		Position getPositionOnTile(int);
 		
 		/*
 		bool collision(std::shared_ptr<Character>);

@@ -4,6 +4,7 @@
 #include "IController.h"
 #include "Character.h"
 #include <SFML\Graphics.hpp>
+#include <iostream>
 #define ATTACK_LENGTH 300
 
 namespace slava
@@ -22,6 +23,8 @@ namespace slava
 
 		// Evo je control metoda
 		void control(Character* character) {
+
+			std::cout << character->getPositionOnTile(16).x << ':' << character->getPositionOnTile(16).y << " in RawMap\n";
 
 			// Regeneracija healtha u ovisnosti levela igraca
 			if (character->getStats()->health < 1) {
