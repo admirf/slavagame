@@ -5,6 +5,7 @@
 #include "IController.h"
 #include "Stats.h"
 #include "Animation.h"
+#include "Map.h"
 #include <vector>
 #include <memory>
 
@@ -36,7 +37,7 @@ namespace slava
 	private:
 
 		std::vector<Animation> animations;
-
+		Map* worldMap;
 		std::shared_ptr<sf::Texture> texture;
 		sf::Sprite* sprite;
 		// sf::Color originalColor;
@@ -65,6 +66,8 @@ namespace slava
 		void setStats(Stats*);
 
 		void setTexture(std::shared_ptr<sf::Texture>);
+		void setMap(Map*);
+		Map* getMap();
 		void draw(sf::RenderWindow&);
 		void addAnimation(Animation&);
 		void playAnimation(int);

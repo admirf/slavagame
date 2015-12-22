@@ -1,79 +1,112 @@
 #include "Map.h"
+#include "Utility.h"
 #include <fstream>
 #include <string>
 #include <iostream>
 
 slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize ms, int blockSize) {
+
+	// templejti za tajlove, trenutno imamo tri vrste tile-ova i sada cemo napravit te tri instance i drzat njihove reference
+	std::vector<std::shared_ptr<Tile>> tileTemplates;
+	tileTemplates.push_back(slava::TileFactory::createRigidTile());
+	tileTemplates.push_back(slava::TileFactory::createNonRigidTile());
+	tileTemplates.push_back(slava::TileFactory::createNonWalkable());
+
+	int defaultIndex = 0; // po default bacamo referencu na rigidTile u mapu
+
 	this->blockSize = blockSize;
 	this->texture = texture;
 	int sizeY = ms.y;
 	int sizeX = ms.x;
 
-	this->map.resize(sizeY);
-	std::ifstream mapa(path);
+	this->map.resize(sizeY); // Ovo nam je reprezentabilna mapa sa kojom cemo imat informacije na kojoj poziciji je koja vrsta tajla od ona tri
+
+	std::ifstream mapa(path); // ucitavamo mapu
+
+	/*
+	Posto crtat svaki rectangle ili crtat svaki sprite sa teksturom pojedinacni ubija performans
+	Preso sam na formiranje mape putem VertexArray i sad imamo odgovarajuci performans
+	Za verteks niz moram prvo svaki quad pojedinacno napravit i odredit koji dio teksture ga boji (switch-om provjeravamo)
+	*/
 
 	array.setPrimitiveType(sf::Quads);
 	array.resize(sizeY * sizeX * 4);
 
 	for (int i = 0; i < sizeY; ++i) {
 
-		this->map[i].resize(sizeX);
+		this->map[i].resize(sizeX); 
 
 		for (int j = 0; j < sizeX; ++j) {
 			char c;
 			mapa >> c; // i ovo da dozivim da koristim nesto sto smo radili na intru za programiranje
-			std::shared_ptr<Block> block;
+			// std::shared_ptr<Block> block;
+
+			sf::VertexArray tmp; // Pravimo rucno jedan quad
+
+			int posX = j * blockSize;
+			int posY = i * blockSize;
+
 			// block->setPosition(j * blockSize, i * blockSize);
 			// std::cout << c << '\n';
+
+			// Switch mi treba da odredim koju teksturu da dam quadu i koju referencu na Tile iz tile templejta da spasim na j, i koordinatu mape
 			switch (c) {
 			case '0':
-				block = std::make_shared<Block>(slava::TileFactory::createTile0(), 0, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(0, blockSize, posX, posY);
 				break;
 			case '1':
-				block = std::make_shared<Block>(slava::TileFactory::createTile1(), 1, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(1, blockSize, posX, posY);
 				break;
 			case 'a':
-				block = std::make_shared<Block>(slava::TileFactory::createTileA(), 2, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(2, blockSize, posX, posY);
+				defaultIndex = 1;
 				break;
 			case 'b':
-				block = std::make_shared<Block>(slava::TileFactory::createTileB(), 3, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(3, blockSize, posX, posY);
+				defaultIndex = 1;
 				break;
 			case 'c':
-				block = std::make_shared<Block>(slava::TileFactory::createTileC(), 4, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(4, blockSize, posX, posY);
+				defaultIndex = 1;
 				break;
 			case 'd':
-				block = std::make_shared<Block>(slava::TileFactory::createTileD(), 5, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(5, blockSize, posX, posY);
+				defaultIndex = 1;
 				break;
 			case 'e':
-				block = std::make_shared<Block>(slava::TileFactory::createTileE(), 6, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(6, blockSize, posX, posY);
+				defaultIndex = 2;
 				break;
 			case 'f':
-				block = std::make_shared<Block>(slava::TileFactory::createTileF(), 7, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(7, blockSize, posX, posY);
+				defaultIndex = 1;
 				break;
 			case 'g':
-				block = std::make_shared<Block>(slava::TileFactory::createTileG(), 8, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(8, blockSize, posX, posY);
+				defaultIndex = 1;
 				break;
 			case 'h':
-				block = std::make_shared<Block>(slava::TileFactory::createTileH(), 9, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(9, blockSize, posX, posY);
+				defaultIndex = 1;
 				break;
 			case 'i':
-				block = std::make_shared<Block>(slava::TileFactory::createTileI(), 10, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(10, blockSize, posX, posY);
+				defaultIndex = 1;
 				break;
 			default:
-				block = std::make_shared<Block>(slava::TileFactory::createTile0(), 0, blockSize, j * blockSize, i * blockSize);
+				tmp = slava::getQuad(1, blockSize, posX, posY);
 
 			}
 
-			sf::VertexArray tmp = block->getVertexArray();
-
+			// Sad posto napravimo posebno quad, koji je sam tipa VertexArray, moramo ga dodat u pseudomultidimenzionalni niz quadova
 			int index = (i + j * sizeY) * 4;
 			array[index] = tmp[0];
 			array[index + 1] = tmp[1];
 			array[index + 2] = tmp[2];
 			array[index + 3] = tmp[3];
 
-			this->map[i][j] = block;
-
+			// spasavamo odgovarajucu referencu tile-a na poziciju da kasnije mozemo znat osobine tile-a na ovoj koordinati
+			this->map[i][j] = tileTemplates[defaultIndex]; 
 		}
 
 	}
@@ -82,11 +115,6 @@ slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize 
 
 void slava::Map::draw(sf::RenderWindow& win) {
 	win.draw(array, texture.get());
-	/* for (int i = 0; i < map.size(); ++i) {
-		for (int j = 0; j < map[i].size(); ++j) {
-			map[i][j]->draw(win);
-		}
-	} */
 }
 
 slava::MapSize slava::getMapSize(const char* path) {
@@ -115,6 +143,6 @@ slava::MapSize slava::getMapSize(const char* path) {
 	return ms;
 }
 
-std::shared_ptr<slava::Block> slava::Map::blockAt(int x, int y) {
+std::shared_ptr<slava::Tile> slava::Map::tileAt(int x, int y) {
 	return this->map[y][x];
 }

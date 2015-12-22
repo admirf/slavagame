@@ -24,7 +24,9 @@ namespace slava
 		// Evo je control metoda
 		void control(Character* character) {
 
-			std::cout << character->getPositionOnTile(16).x << ':' << character->getPositionOnTile(16).y << " in RawMap\n";
+			int x = character->getPositionOnTile(16).x;
+			int y = character->getPositionOnTile(16).y;
+			std::cout << x << ':' << y << " in RawMap\n";
 
 			// Regeneracija healtha u ovisnosti levela igraca
 			if (character->getStats()->health < 1) {
@@ -39,18 +41,18 @@ namespace slava
 				character->stopDown();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				character->moveUp();
-			}
-			else {
-				character->stopUp();
-			}
-
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 				character->moveRight();
 			}
 			else {
 				character->stopRight();
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+				character->moveUp();
+			}
+			else {
+				character->stopUp();
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {

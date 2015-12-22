@@ -219,3 +219,11 @@ slava::Position slava::Character::getPositionOnTile(int tileSize) {
 	p.y = this->sprite->getPosition().y / tileSize;
 	return p;
 }
+
+void slava::Character::setMap(Map* map) {
+	this->worldMap = map;
+}
+
+slava::Map* slava::Character::getMap() {
+	return this->worldMap;
+}

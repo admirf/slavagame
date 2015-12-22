@@ -27,6 +27,7 @@ int main()
 	cout << "It reaches this" << endl;
 
 	auto character = make_shared<Character>();
+	character->setMap(&map);
 	character->setTexture(loadTexture("Main-Character.png"));
 	character->setController(new KeyController());
 	character->getStats()->health = 0.5;
