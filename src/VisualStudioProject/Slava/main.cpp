@@ -6,6 +6,8 @@
 #include "Camera.h"
 #include "EnemyFactory.h"
 #include "Utility.h"
+#include "Map.h"
+#include "TileFactory.h"
 #include <iostream>
 
 using namespace std;
@@ -17,6 +19,12 @@ int main()
 	window.setVerticalSyncEnabled(true);
 
 	window.setKeyRepeatEnabled(true);
+
+	Textures texts = TileFactory::getTileTextures();
+
+	Map map("mapa1.txt", texts, getMapSize("mapa1.txt"), 16);
+
+	cout << "It reaches this" << endl;
 
 	auto character = make_shared<Character>();
 	character->setTexture(loadTexture("Main-Character.png"));
@@ -47,12 +55,6 @@ int main()
 	sf::View customView(sf::FloatRect(0, 0, 1000, 600));
 	cam.bindHUD(&hud);
 
-	sf::CircleShape shape(50);
-	shape.setPosition(400, 20);
-	shape.setFillColor(sf::Color(100, 250, 50));
-	sf::CircleShape shape2(50);
-	shape2.setPosition(480, 20);
-	shape2.setFillColor(sf::Color(100, 250, 50));
 	
 	while (window.isOpen())
 	{
@@ -79,8 +81,7 @@ int main()
 		enemy->updateAnimation(0);
 		// cout << character->isHit << endl;
 		window.clear();
-		window.draw(shape);
-		window.draw(shape2);
+		map.draw(window);
 
 		if (!enemy->isDead()) {
 			enemy->draw(window);

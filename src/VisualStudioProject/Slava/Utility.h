@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <iostream>
 #include <SFML\Graphics.hpp>
 
 // Pomocne funkcije
@@ -14,7 +15,8 @@ namespace slava
 	static std::shared_ptr<sf::Texture> loadTexture(const char* path) {
 		auto tx = std::make_shared<sf::Texture>();
 		if (!tx->loadFromFile(path)) {
-			return NULL;
+			std::cout << path << " not found\n";
+			tx->loadFromFile("0.png");
 		}
 		// tx->loadFromFile(path);
 		tx->setSmooth(true);
