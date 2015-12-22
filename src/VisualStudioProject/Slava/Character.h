@@ -32,12 +32,13 @@ namespace slava
 
 	struct Position { int x; int y; };
 
-	class Character : sf::Transformable
+	class Character : public sf::Transformable
 	{
 	private:
 
 		std::vector<Animation> animations;
 		Map* worldMap;
+		bool mapIsSet = false;
 		std::shared_ptr<sf::Texture> texture;
 		sf::Sprite* sprite;
 		// sf::Color originalColor;
@@ -84,6 +85,7 @@ namespace slava
 		void stopRight();
 		bool isDead();
 		void gotHit(bool);
+		bool isValidMovementPoint(double x, double y);
 		Position getPositionOnTile(int);
 		
 		/*

@@ -24,9 +24,10 @@ namespace slava
 		// Evo je control metoda
 		void control(Character* character) {
 
-			int x = character->getPositionOnTile(16).x;
-			int y = character->getPositionOnTile(16).y;
-			std::cout << x << ':' << y << " in RawMap\n";
+			int x = character->getSprite()->getPosition().x;
+			int y = character->getSprite()->getPosition().y;
+
+			// std::cout << x << ':' << y << " in RawMap\n";
 
 			// Regeneracija healtha u ovisnosti levela igraca
 			if (character->getStats()->health < 1) {
@@ -34,28 +35,30 @@ namespace slava
 			}
 			
 			// Obicna kontrola kretnje, ako tipka nije stisnuta treba zaustavljat karakter u tom smjeru
+			// Ove provjere valid movement point ovo ja sad cisto onako da vidim bil funkcionisalo i evo bi
+			// naravno ova sad implementacija za koliziju je dosta neprecizna i treba za svaki smjer napravit posebno provjeru mozel se ic dalje
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				character->moveDown();
+				if(character->isValidMovementPoint(x, y + 2)) character->moveDown();
 			}
 			else {
 				character->stopDown();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && character->isValidMovementPoint(x + 1, y)) {
 				character->moveRight();
 			}
 			else {
 				character->stopRight();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && character->isValidMovementPoint(x, y - 2)) {
 				character->moveUp();
 			}
 			else {
 				character->stopUp();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && character->isValidMovementPoint(x - 1, y)) {
 				character->moveLeft();
 			}
 			else {

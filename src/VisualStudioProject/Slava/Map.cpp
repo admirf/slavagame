@@ -6,6 +6,8 @@
 
 slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize ms, int blockSize) {
 
+	mapSize = ms;
+
 	// templejti za tajlove, trenutno imamo tri vrste tile-ova i sada cemo napravit te tri instance i drzat njihove reference
 	std::vector<std::shared_ptr<Tile>> tileTemplates;
 	tileTemplates.push_back(slava::TileFactory::createRigidTile());
@@ -31,6 +33,7 @@ slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize 
 
 	array.setPrimitiveType(sf::Quads);
 	array.resize(sizeY * sizeX * 4);
+	secondLayer.setPrimitiveType(sf::Quads);
 
 	for (int i = 0; i < sizeY; ++i) {
 
@@ -53,9 +56,11 @@ slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize 
 			switch (c) {
 			case '0':
 				tmp = slava::getQuad(0, blockSize, posX, posY);
+				defaultIndex = 0;
 				break;
 			case '1':
 				tmp = slava::getQuad(1, blockSize, posX, posY);
+				defaultIndex = 0;
 				break;
 			case 'a':
 				tmp = slava::getQuad(2, blockSize, posX, posY);
@@ -95,6 +100,7 @@ slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize 
 				break;
 			default:
 				tmp = slava::getQuad(1, blockSize, posX, posY);
+				defaultIndex = 0;
 
 			}
 
@@ -105,16 +111,30 @@ slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize 
 			array[index + 2] = tmp[2];
 			array[index + 3] = tmp[3];
 
+			std::cout << c;
+
+			// drugi layer
+			if (defaultIndex == 1 || defaultIndex == 2) {
+				
+				secondLayer.append(tmp[0]);
+				secondLayer.append(tmp[1]);
+				secondLayer.append(tmp[2]);
+				secondLayer.append(tmp[3]);
+			}
+			
+
 			// spasavamo odgovarajucu referencu tile-a na poziciju da kasnije mozemo znat osobine tile-a na ovoj koordinati
 			this->map[i][j] = tileTemplates[defaultIndex]; 
 		}
+		std::cout << '\n';
 
 	}
 	mapa.close();
 }
 
-void slava::Map::draw(sf::RenderWindow& win) {
-	win.draw(array, texture.get());
+void slava::Map::draw(sf::RenderWindow& win, bool isLayer) {
+	if(!isLayer) win.draw(array, texture.get());
+	else win.draw(secondLayer, texture.get());
 }
 
 slava::MapSize slava::getMapSize(const char* path) {
@@ -145,4 +165,12 @@ slava::MapSize slava::getMapSize(const char* path) {
 
 std::shared_ptr<slava::Tile> slava::Map::tileAt(int x, int y) {
 	return this->map[y][x];
+}
+
+int slava::Map::getTileSize() {
+	return blockSize;
+}
+
+slava::MapSize slava::Map::getSize() {
+	return this->mapSize;
 }

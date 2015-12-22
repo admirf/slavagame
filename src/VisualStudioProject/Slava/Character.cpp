@@ -221,9 +221,25 @@ slava::Position slava::Character::getPositionOnTile(int tileSize) {
 }
 
 void slava::Character::setMap(Map* map) {
+	mapIsSet = true;
 	this->worldMap = map;
 }
 
 slava::Map* slava::Character::getMap() {
 	return this->worldMap;
+}
+
+// Ovo nek stoji zasad mada je daleko netacno ne mogu se smarat vise veceras
+bool slava::Character::isValidMovementPoint(double x, double y) {
+	int j = ((int)x + this->sprite->getGlobalBounds().width/2 - 1) / worldMap->getTileSize();
+    int i = (int)y / worldMap->getTileSize();
+	// 
+	int pixelLength = this->sprite->getGlobalBounds().height / worldMap->getTileSize();
+	for (int k = i; k <= pixelLength + i; ++k) {
+		if (j < 0 || k < 0 || j >= worldMap->getSize().x || k >= worldMap->getSize().y) return false;
+		if (!worldMap->tileAt(j, k)->isWalkable) return false;
+	}
+	
+	std::cout << j << ':' << i << ' ' << worldMap->tileAt(j, i)->isWalkable << '\n';
+	return true;
 }

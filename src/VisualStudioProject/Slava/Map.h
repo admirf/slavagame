@@ -27,13 +27,17 @@ namespace slava
 	{
 	private:
 		sf::VertexArray array;
+		sf::VertexArray secondLayer;
 		int blockSize;
+		MapSize mapSize;
 		RawMap map;
 		std::shared_ptr<sf::Texture> texture;
 	public:
 		Map(const char*, std::shared_ptr<sf::Texture>, MapSize, int);
-		void draw(sf::RenderWindow& win);
+		void draw(sf::RenderWindow& win, bool isLayer=false);
 		std::shared_ptr<Tile> tileAt(int, int);
+		MapSize getSize();
+		int getTileSize();
 	};
 
 }

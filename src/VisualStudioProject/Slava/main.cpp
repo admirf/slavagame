@@ -87,6 +87,7 @@ int main()
 		}
 		
 		character->draw(window);
+		map.draw(window, true);
 		
 		hud.draw(window);
 		
