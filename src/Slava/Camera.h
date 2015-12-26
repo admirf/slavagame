@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "Map.h"
+
 namespace sf
 {
 	class Sprite;
@@ -22,6 +24,7 @@ namespace slava
 	class Camera
 	{
 	private:
+		MapSize ms;
 		sf::Sprite* center;
 		int offsetX;
 		int originalX;
@@ -32,7 +35,7 @@ namespace slava
 		int acc = 1;
 
 	public:
-		Camera(sf::Sprite*);
+		Camera(sf::Sprite*, MapSize, int);
 		void setOffset(int, int);
 		void update(sf::View&);
 		void bindHUD(HUD*);

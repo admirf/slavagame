@@ -5,10 +5,13 @@
 
 #define ABS(x) x < 0? -x: x
 
-slava::Camera::Camera(sf::Sprite* sprite) {
+slava::Camera::Camera(sf::Sprite* sprite, slava::MapSize ms, int tileSize) {
 	center = sprite;
 	offsetX = 0;
 	offsetY = 0;
+	this->ms = ms;
+	this->ms.x = ms.x * tileSize;
+	this->ms.y = ms.y * tileSize;
 }
 
 void slava::Camera::setOffset(int x, int y) {
@@ -31,6 +34,10 @@ void slava::Camera::update(sf::View& view) {
 
 	int x = center->getPosition().x;
 	int y = center->getPosition().y;
+
+	int width = view.getSize().x / 2;
+	int height = view.getSize().y / 2;
+
 
 	int nX = view.getCenter().x;
 	int nY = view.getCenter().y;
@@ -66,6 +73,24 @@ void slava::Camera::update(sf::View& view) {
 			offsetY -= acc;
 		}
 	}
+
+	if (x + width - offsetX > ms.x) {
+		nX = ms.x - width;
+	}
+
+	if (x - width + offsetX < 0) {
+		nX = width;
+	}
+
+	if (y + height - offsetY > ms.y) {
+		nY = ms.y - height;
+	}
+
+	if (y - height + offsetY < 0) {
+		nY = height;
+	}
+
+	// std::cout << ms.x << ' ' << ms.y << "Ovo ti trenutno treba\n";
 
 	view.setCenter(nX, nY);
 

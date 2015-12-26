@@ -22,7 +22,9 @@ int main()
 
 	auto txt = loadTexture("tileset_1.png");
 
-	Map map("mapa1.txt", txt, getMapSize("mapa1.txt"), 16);
+
+	MapSize ms = getMapSize("mapa1.txt");
+	Map map("mapa1.txt", txt, ms, 16);
 
 	cout << "It reaches this" << endl;
 
@@ -47,7 +49,7 @@ int main()
 	enemy->addAnimation(anim);
 
 	HUD hud(character->getStats(), "sgs.ttf");
-	Camera cam(character->getSprite());
+	Camera cam(character->getSprite(), ms, map.getTileSize());
 	cam.setAcceleration(2);
 	cam.setOffset(200, 100);
 	sf::View customView(sf::FloatRect(0, 0, 1000, 600));
@@ -73,7 +75,6 @@ int main()
 			character->updateAnimation(0);
 			enemy->control();
 			enemy->updateAnimation(0);
-			
 
 		}
 		character->updateAnimation(0);

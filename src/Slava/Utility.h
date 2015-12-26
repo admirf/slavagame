@@ -11,6 +11,7 @@
 
 namespace slava
 {
+
 	// Pomocna funkcija za brzo formiranje quada u mapi
 	static sf::VertexArray getQuad(int textureIndex, int size, int x, int y) {
 
@@ -35,7 +36,7 @@ namespace slava
 		auto tx = std::make_shared<sf::Texture>();
 		if (!tx->loadFromFile(path)) {
 			std::cout << path << " not found\n";
-			tx->loadFromFile("0.png");
+			// tx->loadFromFile("0.png");
 		}
 		// tx->loadFromFile(path);
 		tx->setSmooth(true);

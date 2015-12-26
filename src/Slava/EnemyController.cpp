@@ -35,31 +35,33 @@ void slava::EnemyController::control(Character* enemy) {
 	if (clock1.getElapsedTime() > reattack) {
 		hit = false; // stavljamo flag, glupo sam ga nazvao, al eto ovaj flag govori da li je enemy zadao udarac ili nije
 		// Posto je vrijeme od zadnjeg dovoljno proslo stavljamo hit opet na false i ganjamo target sa ovim move-vima
-		if (x < xTarget) {
-			enemy->moveRight();
-			enemy->stopLeft();
-		}
-		else if (x > xTarget) {
-			enemy->moveLeft();
-			enemy->stopRight();
-		}
-		else {
-			enemy->stopLeft();
-			enemy->stopRight();
-		}
+		
+	}
+	const int kvad = 20;
+	if (x < xTarget - kvad ) {
+		enemy->moveRight();
+		enemy->stopLeft();
+	}
+	else if (x > xTarget + kvad) {
+		enemy->moveLeft();
+		enemy->stopRight();
+	}
+	else {
+		enemy->stopLeft();
+		enemy->stopRight();
+	}
 
-		if (y < yTarget) {
-			enemy->moveDown();
-			enemy->stopUp();
-		}
-		else if (y > yTarget) {
-			enemy->moveUp();
-			enemy->stopDown();
-		}
-		else {
-			enemy->stopUp();
-			enemy->stopDown();
-		}
+	if (y < yTarget -kvad ) {
+		enemy->moveDown();
+		enemy->stopUp();
+	}
+	else if (y > yTarget + kvad) {
+		enemy->moveUp();
+		enemy->stopDown();
+	}
+	else {
+		enemy->stopUp();
+		enemy->stopDown();
 	}
 
 	// racunamo udaljenost od targeta
@@ -71,7 +73,7 @@ void slava::EnemyController::control(Character* enemy) {
 	// javi igracu da je udaren gotHit(true) true se stavlja ako je character main character, ako nije stavlja se false
 	// pokreni enemija u random smjeru
 	// restartuj sat koji mjeri vrijeme od zadnjeg udarca
-	if (dist  <= 20 && !hit) {
+	if (dist  <= 40 && !hit) {
 		
 		hit = true;
 		enemy->playAnimation(0);

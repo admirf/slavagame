@@ -111,7 +111,7 @@ slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize 
 			array[index + 2] = tmp[2];
 			array[index + 3] = tmp[3];
 
-			std::cout << c;
+			// std::cout << c;
 
 			// drugi layer
 			if (defaultIndex == 1 || defaultIndex == 2) {
@@ -126,7 +126,7 @@ slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize 
 			// spasavamo odgovarajucu referencu tile-a na poziciju da kasnije mozemo znat osobine tile-a na ovoj koordinati
 			this->map[i][j] = tileTemplates[defaultIndex]; 
 		}
-		std::cout << '\n';
+		// std::cout << '\n';
 
 	}
 	mapa.close();
