@@ -7,6 +7,7 @@
 
 namespace slava
 {
+	typedef std::shared_ptr<sf::Texture> TexturePtr;
 	class Character;
 
 	/*
@@ -32,17 +33,17 @@ namespace slava
 		sf::Time lastTime;
 		sf::Clock clock;
 		Character* animated;
-		std::shared_ptr<sf::Texture> originalTexture;
+		TexturePtr originalTexture;
 		bool started = false;
 		bool set = false;
 		int count;
 		int originalCount;
 	public:
-		Animation(std::vector<std::shared_ptr<sf::Texture> >&, sf::Time);
+		Animation(std::vector<TexturePtr>&, sf::Time);
 		void setAnimated(Character*);
 		void update();
 		void play();
-		std::vector<std::shared_ptr<sf::Texture> > getTextures();
+		std::vector<TexturePtr> getTextures();
 	};
 }
 

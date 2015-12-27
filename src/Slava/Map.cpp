@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize ms, int blockSize) {
+slava::Map::Map(const char* path, TexturePtr texture, MapSize ms, int blockSize) {
 
 	mapSize = ms;
 
@@ -62,44 +62,22 @@ slava::Map::Map(const char* path, std::shared_ptr<sf::Texture> texture, MapSize 
 				tmp = slava::getQuad(1, blockSize, posX, posY);
 				defaultIndex = 0;
 				break;
-			case 'a':
+			case '2':
 				tmp = slava::getQuad(2, blockSize, posX, posY);
-				defaultIndex = 1;
-				break;
-			case 'b':
-				tmp = slava::getQuad(3, blockSize, posX, posY);
-				defaultIndex = 1;
-				break;
-			case 'c':
-				tmp = slava::getQuad(4, blockSize, posX, posY);
-				defaultIndex = 1;
-				break;
-			case 'd':
-				tmp = slava::getQuad(5, blockSize, posX, posY);
-				defaultIndex = 1;
-				break;
-			case 'e':
-				tmp = slava::getQuad(6, blockSize, posX, posY);
-				defaultIndex = 2;
-				break;
-			case 'f':
-				tmp = slava::getQuad(7, blockSize, posX, posY);
-				defaultIndex = 1;
-				break;
-			case 'g':
-				tmp = slava::getQuad(8, blockSize, posX, posY);
-				defaultIndex = 1;
-				break;
-			case 'h':
-				tmp = slava::getQuad(9, blockSize, posX, posY);
-				defaultIndex = 1;
-				break;
-			case 'i':
-				tmp = slava::getQuad(10, blockSize, posX, posY);
-				defaultIndex = 1;
+				defaultIndex = 0;
 				break;
 			default:
-				tmp = slava::getQuad(1, blockSize, posX, posY);
+				bool flag = false;
+				for (int i = 3; i <= 22; ++i) {
+					if (c == i + 'a' - 3) {
+						flag = true;
+						// std::cout << "Dodje dovde "<< c - 'a' + 3 << std::endl;
+						tmp = slava::getQuad(i, blockSize, posX, posY);
+					}
+				}
+				if (!flag) {
+					tmp = slava::getQuad(0, blockSize, posX, posY);
+				}
 				defaultIndex = 0;
 
 			}

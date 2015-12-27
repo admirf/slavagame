@@ -1,7 +1,7 @@
 #include "Character.h"
 #include "Animation.h"
 
-slava::Animation::Animation(std::vector<std::shared_ptr<sf::Texture> >& frames, sf::Time time) {
+slava::Animation::Animation(std::vector<TexturePtr>& frames, sf::Time time) {
 	this->frames = frames;
 	this->interval = time;
 	originalCount = frames.size();
@@ -27,7 +27,7 @@ void slava::Animation::play() {
 	}
 }
 
-std::vector<std::shared_ptr<sf::Texture> > slava::Animation::getTextures() {
+std::vector<slava::TexturePtr> slava::Animation::getTextures() {
 	return frames;
 }
 

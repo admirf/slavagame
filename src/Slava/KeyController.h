@@ -3,6 +3,7 @@
 
 #include "IController.h"
 #include "Character.h"
+#include "GameWorld.h"
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #define ATTACK_LENGTH 300
@@ -83,6 +84,7 @@ namespace slava
 					character->playAnimation(0);
 					character->isAttack = true;
 					sf::Time t1 = clock.restart();
+					// character->getGameWorld()->getNotification()->play("You hit the bastard!");
 					// character->hit();
 				}
 				

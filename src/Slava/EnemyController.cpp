@@ -1,10 +1,12 @@
 #include "EnemyController.h"
+#include "GameWorld.h"
+#include "EnemyFactory.h"
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 
 // U enemy konstruktor se postavlja referenca na igraca tj. Main charactera
-slava::EnemyController::EnemyController(std::shared_ptr<Character> player) {
+slava::EnemyController::EnemyController(CharacterPtr player) {
 	this->player = player;
 }
 
@@ -95,6 +97,9 @@ void slava::EnemyController::control(Character* enemy) {
 		enemy->gotHit(false);
 
 		if (enemy->isDead()) {
+			this->player->getGameWorld()->getNotification()->play("You killed the mamojebac!");
+			enemy->alive();
+			enemy->getSprite()->setPosition(0, 0);
 			this->player->getStats()->sp += 200;
 		}
 		/* sf::Thread th(&Character::gotHit, enemy);

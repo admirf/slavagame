@@ -8,94 +8,72 @@
 #include "Utility.h"
 #include "Map.h"
 #include "TileFactory.h"
+#include "Notification.h"
+#include "GameWorld.h"
 #include <iostream>
+#define WIN_SIZE_X 1000
+#define WIN_SIZE_Y 600
 
 using namespace std;
 using namespace slava;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1000, 600), "Slava");
-	window.setVerticalSyncEnabled(true);
+	// Resursi
+	auto txt = loadTexture("new_tileset.png");
+	auto font = loadFont("sgs.ttf");
 
+	// Prozor
+	sf::RenderWindow window(sf::VideoMode(WIN_SIZE_X, WIN_SIZE_Y), "Slava");
+	window.setVerticalSyncEnabled(true);
 	window.setKeyRepeatEnabled(true);
 
-	auto txt = loadTexture("tileset_1.png");
+	// Mapa
+	MapSize ms = getMapSize("mapa.txt");
+	Map map("mapa.txt", txt, ms, 16);
 
+	// kreacija svijeta, mora bit poslije mape i prozora, a prije charactera da bi mogli stavit u character referencu na game world
+	auto world = make_shared<GameWorld>(&window, &map);
 
-	MapSize ms = getMapSize("mapa1.txt");
-	Map map("mapa1.txt", txt, ms, 16);
-
-	cout << "It reaches this" << endl;
-
+	// Main character
 	auto character = make_shared<Character>();
 	character->setMap(&map);
 	character->setTexture(loadTexture("Main-Character.png"));
 	character->setController(new KeyController());
 	character->getStats()->health = 0.5;
 	character->getStats()->sp = 20000;
-
+	character->setGameWorld(world);
 	// animacija udaranja
 	vector<shared_ptr<sf::Texture>> textures;
 	textures.push_back(loadTexture("main_cha_hit.png"));
 	Animation anim(textures, sf::milliseconds(180));
 	character->addAnimation(anim);
 
-	/* // animacija hodanja
-	vector<shared_ptr<sf::Texture>> texturesAnim2;
-	texturesAnim2.push_back(loadTexture);*/
-
+	// Neprijatelj
 	auto enemy = EnemyFactory::createBasicEnemy(character, 200, 400);
 	enemy->addAnimation(anim);
+	enemy->setGameWorld(world);
 
-	HUD hud(character->getStats(), "sgs.ttf");
+	// HUD, Notifikacije i Kamera
+	HUD hud(character->getStats(), font);
+	Notification notification(font, sf::Color::Red);
 	Camera cam(character->getSprite(), ms, map.getTileSize());
 	cam.setAcceleration(2);
 	cam.setOffset(200, 100);
-	sf::View customView(sf::FloatRect(0, 0, 1000, 600));
-	// customView.zoom(0.7);
+	sf::View customView(sf::FloatRect(0, 0, WIN_SIZE_X, WIN_SIZE_Y));
 	cam.bindHUD(&hud);
+	cam.bindNotification(&notification);
 
-	
-	while (window.isOpen())
-	{
-		// cout << character->isAttack << endl;
-		cam.update(customView);
-		// customView.setCenter(character->getSprite()->getPosition());
-		sf::Event event;
-		enemy->control();
-		character->control();
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
+	// Spajamo sve u jedan svijet
+	world->setMainCharacter(character);
+	world->addCharacter(enemy);
+	world->setCamera(&cam);
+	world->setHUD(&hud);
+	world->setNotification(&notification);
+	world->setView(&customView);
 
-			
-			character->control();
-			character->updateAnimation(0);
-			enemy->control();
-			enemy->updateAnimation(0);
-
-		}
-		character->updateAnimation(0);
-		enemy->updateAnimation(0);
-		// cout << character->isHit << endl;
-		window.clear();
-		map.draw(window);
-
-		if (!enemy->isDead()) {
-			enemy->draw(window);
-		}
-		
-		character->draw(window);
-		map.draw(window, true);
-		
-		hud.draw(window);
-		
-		window.setView(customView);
-		window.display();
-	}
-
+	// Pokrecemo svijet
+	world->start();
 
 	return 0;
 }

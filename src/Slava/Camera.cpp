@@ -1,11 +1,13 @@
 #include "Camera.h"
 #include "HUD.h"
+#include "Notification.h"
 #include <iostream>
 #include <SFML\Graphics.hpp>
 
 #define ABS(x) x < 0? -x: x
 
 slava::Camera::Camera(sf::Sprite* sprite, slava::MapSize ms, int tileSize) {
+	this->tileSize = tileSize;
 	center = sprite;
 	offsetX = 0;
 	offsetY = 0;
@@ -24,6 +26,11 @@ void slava::Camera::setOffset(int x, int y) {
 void slava::Camera::bindHUD(HUD* hud) {
 	this->hud = hud;
 	hasHUD = true;
+}
+
+void slava::Camera::bindNotification(Notification* notification) {
+	this->notification = notification;
+	hasNotification = true;
 }
 
 void slava::Camera::setAcceleration(int n) {
@@ -96,5 +103,8 @@ void slava::Camera::update(sf::View& view) {
 
 	if (hasHUD) {
 		hud->setPosition(nX - view.getSize().x/2, nY - view.getSize().y/2);
+	}
+	if (hasNotification) {
+		notification->setPosition(nX - notification->getMessageWidth() * tileSize/2, nY + nY * 0.3);
 	}
 }

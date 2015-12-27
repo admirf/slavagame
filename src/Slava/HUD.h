@@ -15,15 +15,17 @@ namespace slava
 	kameri da bi se HUD crto na poziciji kamere
 	*/
 
+	typedef std::shared_ptr<sf::Font> FontPtr;
+
 	class HUD
 	{
 	private:
 		Stats* stats;
-		sf::Font font;
+		FontPtr font;
 		int x = 0, y = 0;
 
 	public:
-		HUD(Stats* s, const char*);
+		HUD(Stats* s, FontPtr);
 		void setStats(Stats* s);
 		void draw(sf::RenderWindow&);
 		void setPosition(int, int);

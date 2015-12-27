@@ -14,14 +14,14 @@ namespace slava
 	class EnemyController: public virtual IController
 	{
 	private:
-		std::shared_ptr<Character> player;
+		CharacterPtr player;
 		// sf::Time lastHit;
 		sf::Clock clock1;
 		bool hit = false;
 
 	public:
 		sf::Time reattack;
-		EnemyController(std::shared_ptr<Character>);
+		EnemyController(CharacterPtr);
 		void control(Character*);
 	};
 

@@ -11,7 +11,8 @@
 
 namespace slava
 {
-
+	typedef std::shared_ptr<sf::Font> FontPtr;
+	typedef std::shared_ptr<sf::Texture> TexturePtr;
 	// Pomocna funkcija za brzo formiranje quada u mapi
 	static sf::VertexArray getQuad(int textureIndex, int size, int x, int y) {
 
@@ -32,7 +33,7 @@ namespace slava
 	}
 
 	// Funkcija da brze ucitavamo teksture i vracamo reference, argument je path do fajla
-	static std::shared_ptr<sf::Texture> loadTexture(const char* path) {
+	static TexturePtr loadTexture(const char* path) {
 		auto tx = std::make_shared<sf::Texture>();
 		if (!tx->loadFromFile(path)) {
 			std::cout << path << " not found\n";
@@ -40,6 +41,17 @@ namespace slava
 		}
 		// tx->loadFromFile(path);
 		tx->setSmooth(true);
+
+		return tx;
+	}
+
+	// Funkcija da brze ucitavamo fontovge i vracamo reference, argument je path do fajla
+	static FontPtr loadFont(const char* path) {
+		auto tx = std::make_shared<sf::Font>();
+		if (!tx->loadFromFile(path)) {
+			std::cout << path << " not found\n";
+			// tx->loadFromFile("0.png");
+		}
 
 		return tx;
 	}

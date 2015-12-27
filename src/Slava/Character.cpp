@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "Stats.h"
+#include "GameWorld.h"
 #include <ctime>
 #include <cstdlib>
 #include <memory>
@@ -22,6 +23,18 @@ slava::Character::~Character() {
 		}
 		// anim.getTextures().clear();
 	}*/
+}
+
+void slava::Character::setGameWorld(GameWorldPtr game) {
+	this->world = game;
+}
+
+slava::GameWorldPtr slava::Character::getGameWorld() {
+	return world;
+}
+
+void slava::Character::alive() {
+	this->stats->health = 1;
 }
 
 void slava::Character::init() {
@@ -69,13 +82,13 @@ void slava::Character::control() {
 	controller->control(this);
 }
 
-void slava::Character::setTexture(std::shared_ptr<sf::Texture> text) {
+void slava::Character::setTexture(TexturePtr text) {
 	texture = text;
 	sprite->setTexture(*texture);
 	// originalColor = sprite->getColor();
 }
 
-std::shared_ptr<sf::Texture> slava::Character::getTexture() {
+slava::TexturePtr slava::Character::getTexture() {
 	return texture;
 }
 
@@ -242,4 +255,8 @@ bool slava::Character::isValidMovementPoint(double x, double y) {
 	
 	std::cout << j << ':' << i << ' ' << worldMap->tileAt(j, i)->isWalkable << '\n';
 	return true;
+}
+
+int slava::Character::getNumberOfAnimations() {
+	return animations.size();
 }

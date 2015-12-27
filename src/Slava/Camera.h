@@ -12,6 +12,7 @@ namespace sf
 namespace slava
 {
 	class HUD;
+	class Notification;
 
 	/*
 	Kamera uzima sprite referencu kao argument (proslijedi se getSprite() karaktera) i ona prati onda taj sprite
@@ -30,8 +31,11 @@ namespace slava
 		int originalX;
 		int offsetY;
 		int originalY;
+		int tileSize;
 		HUD* hud;
+		Notification* notification;
 		bool hasHUD = false;
+		bool hasNotification = false;
 		int acc = 1;
 
 	public:
@@ -39,6 +43,7 @@ namespace slava
 		void setOffset(int, int);
 		void update(sf::View&);
 		void bindHUD(HUD*);
+		void bindNotification(Notification*);
 		void setAcceleration(int);
 	};
 

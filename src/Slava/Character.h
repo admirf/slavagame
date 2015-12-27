@@ -12,7 +12,8 @@
 namespace slava
 {
 	class Animation;
-
+	class GameWorld;
+	typedef std::shared_ptr<GameWorld> GameWorldPtr;
 	/*
 	Character je fancy klasa koja wrappuje sf::Sprite i nasljedjuje sf::Transformable (da bi se lakse pomjero karakter)
 	Character enkapsulira reference na Sprite i Teksturu a uz to sadrzi vektor animacija koje se mogu pustat o animacijama kasnije
@@ -31,15 +32,18 @@ namespace slava
 	*/
 
 	struct Position { int x; int y; };
+	typedef std::shared_ptr<sf::Texture> TexturePtr;
+	typedef std::shared_ptr<Character> CharacterPtr;
 
 	class Character : public sf::Transformable
 	{
 	private:
 
+		GameWorldPtr world;
 		std::vector<Animation> animations;
 		Map* worldMap;
 		bool mapIsSet = false;
-		std::shared_ptr<sf::Texture> texture;
+		TexturePtr texture;
 		sf::Sprite* sprite;
 		// sf::Color originalColor;
 		// std::vector< std::shared_ptr<Character> > otherCharacters;
@@ -66,13 +70,16 @@ namespace slava
 		sf::Sprite* getSprite();
 		void setStats(Stats*);
 
-		void setTexture(std::shared_ptr<sf::Texture>);
+		void setGameWorld(GameWorldPtr);
+		GameWorldPtr getGameWorld();
+		void setTexture(TexturePtr);
 		void setMap(Map*);
 		Map* getMap();
 		void draw(sf::RenderWindow&);
 		void addAnimation(Animation&);
 		void playAnimation(int);
 		void updateAnimation(int);
+		int getNumberOfAnimations();
 
 		void moveRandom();
 		void moveLeft();
@@ -84,6 +91,7 @@ namespace slava
 		void stopLeft();
 		void stopRight();
 		bool isDead();
+		void alive();
 		void gotHit(bool);
 		bool isValidMovementPoint(double x, double y);
 		Position getPositionOnTile(int);
@@ -99,7 +107,7 @@ namespace slava
 		void setController(IController*);
 		void control();
 
-		std::shared_ptr<sf::Texture> getTexture();
+		TexturePtr getTexture();
 		~Character();
 	};
 

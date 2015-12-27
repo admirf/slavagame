@@ -1,9 +1,9 @@
 #include "HUD.h"
 
 
-slava::HUD::HUD(Stats* stats, const char* path) {
+slava::HUD::HUD(Stats* stats, FontPtr font) {
 	this->stats = stats;
-	this->font.loadFromFile(path);
+	this->font = font;
 }
 
 void slava::HUD::setStats(Stats* stats) {
@@ -18,7 +18,7 @@ void slava::HUD::setPosition(int x, int y) {
 void slava::HUD::draw(sf::RenderWindow& win) {
 
 	sf::Text health_text;
-	health_text.setFont(font);
+	health_text.setFont(*font);
 	std::string s;
 	s = "Health: " + slava::toString(static_cast<int>(stats->health * 100)) + "%";
 	health_text.setString(s);
@@ -26,7 +26,7 @@ void slava::HUD::draw(sf::RenderWindow& win) {
 	health_text.setPosition(x, y);
 
 	sf::Text sp_text;
-	sp_text.setFont(font);
+	sp_text.setFont(*font);
 	s = "SP: " + slava::toString(stats->sp);
 	sp_text.setString(s);
 	sp_text.setColor(sf::Color::Red);
