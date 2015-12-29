@@ -13,6 +13,7 @@ slava::Map::Map(const char* path, TexturePtr texture, MapSize ms, int blockSize)
 	tileTemplates.push_back(slava::TileFactory::createRigidTile());
 	tileTemplates.push_back(slava::TileFactory::createNonRigidTile());
 	tileTemplates.push_back(slava::TileFactory::createNonWalkable());
+	tileTemplates.push_back(slava::TileFactory::createWater());
 
 	// non walkable tileovi
 	std::ifstream blockf("blockable.txt");
@@ -70,6 +71,7 @@ slava::Map::Map(const char* path, TexturePtr texture, MapSize ms, int blockSize)
 			for (int i = 'a'; i < 'z'; ++i) {
 				if (c == i) {
 					if (c == 'd') defaultIndex = 1;
+					else if (c == 'c') defaultIndex = 3;
 					else if (blockable[c - 'a']) defaultIndex = 2;
 					else defaultIndex = 0;
 					tmp = getQuad(i - 'a', blockSize, posX, posY);
@@ -78,7 +80,7 @@ slava::Map::Map(const char* path, TexturePtr texture, MapSize ms, int blockSize)
 			}
 
 			// Sad posto napravimo posebno quad, koji je sam tipa VertexArray, moramo ga dodat u pseudomultidimenzionalni niz quadova
-			if (!defaultIndex) {
+			if (!defaultIndex || defaultIndex == 3) {
 				int index = (i + j * sizeY) * 4;
 				array[index] = tmp[0];
 				array[index + 1] = tmp[1];

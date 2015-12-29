@@ -24,6 +24,7 @@ void slava::Trigger::check(GameWorld* world) {
 
 	if (isTriggered(world)) {
 		run(world);
+		fired = true;
 	}
-	fired = true;
+	
 }

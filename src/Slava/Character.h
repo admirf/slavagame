@@ -40,7 +40,7 @@ namespace slava
 	private:
 
 		const char* id;
-		GameWorldPtr world;
+		GameWorld* world;
 		std::vector<Animation> animations;
 		Map* worldMap;
 		bool mapIsSet = false;
@@ -63,6 +63,7 @@ namespace slava
 
 	public:
 		bool isAttack;
+		bool isBlock;
 		double limit = 2;
 		Character(const char*);
 		Character(const char*, sf::Texture*);
@@ -72,8 +73,8 @@ namespace slava
 		void setStats(Stats*);
 		const char* getID();
 
-		void setGameWorld(GameWorldPtr);
-		GameWorldPtr getGameWorld();
+		void setGameWorld(GameWorld*);
+		GameWorld* getGameWorld();
 		void setTexture(TexturePtr);
 		void setMap(Map*);
 		Map* getMap();

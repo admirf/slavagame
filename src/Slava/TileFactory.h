@@ -35,6 +35,12 @@ namespace slava
 			tile0->isRigid = false;
 			return tile0;
 		}
+		static std::shared_ptr<Tile> createWater() {
+			auto tile0 = std::make_shared<Tile>();
+			tile0->isWalkable = false;
+			tile0->isRigid = true;
+			return tile0;
+		}
 		
 	};
 }

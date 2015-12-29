@@ -17,6 +17,7 @@ namespace slava
 		Trigger(const char*);
 		void setTrigger(bool (*f)(GameWorld*));
 		void setRun(void (*f)(GameWorld*));
+		bool fireOnce = false;
 		void check(GameWorld*);
 		bool hasFired();
 		const char* getID();

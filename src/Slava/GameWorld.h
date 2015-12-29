@@ -22,6 +22,7 @@ namespace slava
 		CharacterPtr mainCharacter;
 		std::unordered_map<const char*, CharacterPtr> characters;
 		std::unordered_map<const char*, Trigger*> triggers;
+		std::unordered_map<const char*, Animation*> animations;
 		std::vector<const char*> toBeRemoved;
 		std::vector<const char*> triggersToBeRemoved;
 		Camera* camera;
@@ -30,23 +31,30 @@ namespace slava
 		sf::View* customView;
 		Map* map;
 		bool isSet[5];
+		bool finished = false;
 
 	public:
 		GameWorld(sf::RenderWindow*, Map*);
 		void setMainCharacter(CharacterPtr);
 		void addCharacter(CharacterPtr);
+		void addCharacters(std::vector<CharacterPtr>&);
 		void removeCharacter(const char*);
 		std::unordered_map<const char*, CharacterPtr> getCharacters();
 		void addTrigger(Trigger*);
 		void removeTrigger(const char*);
 		CharacterPtr getMainCharacter();
 		std::unordered_map<const char*, Trigger*> getTriggers();
+		void addAnimation(Animation*);
+		Animation* getAnimation(const char*);
 		void setCamera(Camera*);
 		void setHUD(HUD*);
 		void setNotification(Notification*);
 		void setView(sf::View*);
 		bool isAllSet();
-		void start();
+		void update();
+		bool isFinished();
+		void finish();
+		void restart();
 
 		Notification* getNotification();
 	};

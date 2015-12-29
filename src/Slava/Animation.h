@@ -38,12 +38,14 @@ namespace slava
 		bool set = false;
 		int count;
 		int originalCount;
+		const char* id;
 	public:
-		Animation(std::vector<TexturePtr>&, sf::Time);
+		Animation(const char*, std::vector<TexturePtr>&, sf::Time);
 		void setAnimated(Character*);
 		void update();
 		void play();
 		std::vector<TexturePtr> getTextures();
+		const char* getID();
 	};
 }
 

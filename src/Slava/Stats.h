@@ -16,6 +16,7 @@ namespace slava
 		// level ide po 0.25 napredak pa cemo mnozit sa nekim stvarima, lakse nego kompleksno levelovanje
 		// Sistem levelovanja i skilova cemo detaljnije izradit kasnije
 		double level;
+		double limit;
 		bool hit = false;
 		int sp; // skill points
 	};

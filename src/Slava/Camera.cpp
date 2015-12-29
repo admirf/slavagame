@@ -105,6 +105,7 @@ void slava::Camera::update(sf::View& view) {
 		hud->setPosition(nX - view.getSize().x/2, nY - view.getSize().y/2);
 	}
 	if (hasNotification) {
-		notification->setPosition(nX - notification->getMessageWidth() * tileSize/2, nY + nY * 0.3);
+		// Ne pitajte me za logiku iza moje matematike
+		notification->setPosition(view.getCenter().x - notification->getMessageWidth() * tileSize/2, view.getCenter().y + height/2 - height * 0.1);
 	}
 }

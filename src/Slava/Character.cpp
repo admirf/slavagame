@@ -25,11 +25,11 @@ slava::Character::~Character() {
 	}*/
 }
 
-void slava::Character::setGameWorld(GameWorldPtr game) {
+void slava::Character::setGameWorld(GameWorld* game) {
 	this->world = game;
 }
 
-slava::GameWorldPtr slava::Character::getGameWorld() {
+slava::GameWorld* slava::Character::getGameWorld() {
 	return world;
 }
 
@@ -49,12 +49,14 @@ void slava::Character::init() {
 	stats->health = 1;
 	stats->level = 1;
 	stats->sp = 0;
+	stats->limit = limit;
 }
 
 slava::Character::Character(const char* id) {
+	this->id = id;
 	sprite = new sf::Sprite();
 	init();
-	this->id = id;
+	
 }
 
 slava::Character::Character(const char* id, sf::Texture* text) {
@@ -156,19 +158,19 @@ void slava::Character::moveRandom() {
 }
 
 void slava::Character::moveRight() {
-	vX = MIN(((vX > 0) ? vX : -vX) + stats->acceleration, limit * stats->level);
+	vX = MIN(((vX > 0) ? vX : -vX) + stats->acceleration, stats->limit * stats->level);
 }
 
 void slava::Character::moveLeft() {
-	vX = MAX(((vX > 0) ? -vX : vX) - stats->acceleration, -limit * stats->level);
+	vX = MAX(((vX > 0) ? -vX : vX) - stats->acceleration, -stats->limit * stats->level);
 }
 
 void slava::Character::moveDown() {
-	vY = MIN(((vY > 0) ? vY : -vY) + stats->acceleration, limit * stats->level);
+	vY = MIN(((vY > 0) ? vY : -vY) + stats->acceleration, stats->limit * stats->level);
 }
 
 void slava::Character::moveUp() {
-	vY = MAX(((vY > 0) ? -vY : vY) - stats->acceleration, -limit * stats->level);
+	vY = MAX(((vY > 0) ? -vY : vY) - stats->acceleration, -stats->limit * stats->level);
 }
 
 void slava::Character::levelUp() {

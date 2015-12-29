@@ -1,12 +1,15 @@
 #include "Character.h"
 #include "Animation.h"
 
-slava::Animation::Animation(std::vector<TexturePtr>& frames, sf::Time time) {
+slava::Animation::Animation(const char* id, std::vector<TexturePtr>& frames, sf::Time time) {
+	this->id = id;
 	this->frames = frames;
 	this->interval = time;
 	originalCount = frames.size();
 	count = 0;
 }
+
+const char* slava::Animation::getID() { return this->id; }
 
 void slava::Animation::setAnimated(Character* c) {
 	this->animated = c;

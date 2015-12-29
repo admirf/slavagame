@@ -89,6 +89,16 @@ namespace slava
 				}
 				
 			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+				character->isAttack = false;
+				character->isBlock = true;
+				character->getGameWorld()->getNotification()->play("Block mode");
+			}
+			else {
+				character->isBlock = false;
+			}
+			
 		}
 	};
 

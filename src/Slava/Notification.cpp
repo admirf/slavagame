@@ -11,7 +11,7 @@ slava::Notification::Notification(FontPtr font, sf::Color color) {
 	setValues(font, color);
 }
 
-void slava::Notification::play(char* msg) {
+void slava::Notification::play(const char* msg) {
 	if (isPlayed) return;
 
 	this->message = msg;
@@ -24,6 +24,16 @@ void slava::Notification::play(char* msg) {
 	this->text = text;
 	clock.restart();
 	this->isPlayed = true;
+}
+
+void slava::Notification::clear() {
+	this->isPlayed = true;
+	this->duration = sf::milliseconds(1000);
+}
+
+void slava::Notification::play(const char* msg, sf::Time duration) {
+	play(msg);
+	setDuration(duration);
 }
 
 void slava::Notification::setPosition(int posX, int posY) {

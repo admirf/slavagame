@@ -10,7 +10,14 @@ void slava::GameWorld::setMainCharacter(CharacterPtr character) {
 }
 
 void slava::GameWorld::addCharacter(CharacterPtr character) {
-	characters[character->getID()] = character;
+	characters.insert(std::make_pair(character->getID(), character));
+	// characters[character->getID()] = character;
+}
+
+void slava::GameWorld::addCharacters(std::vector<CharacterPtr>& chars) {
+	for (auto& character : chars) {
+		characters[character->getID()] = character;
+	}
 }
 
 void slava::GameWorld::removeCharacter(const char* id) {
@@ -31,6 +38,14 @@ std::unordered_map<const char*, slava::Trigger*> slava::GameWorld::getTriggers()
 
 std::unordered_map<const char*, slava::CharacterPtr> slava::GameWorld::getCharacters() {
 	return characters;
+}
+
+void slava::GameWorld::addAnimation(Animation* anim) {
+	animations[anim->getID()] = anim;
+}
+
+slava::Animation* slava::GameWorld::getAnimation(const char* id) {
+	return animations[id];
 }
 
 void slava::GameWorld::setCamera(Camera* cam) {
@@ -66,89 +81,103 @@ slava::CharacterPtr slava::GameWorld::getMainCharacter() {
 	return mainCharacter;
 }
 
-void slava::GameWorld::start() {
+bool slava::GameWorld::isFinished() { return finished; }
+void slava::GameWorld::finish() { finished = true; }
+
+void slava::GameWorld::restart() {
+	this->notification->clear();
+	this->mainCharacter->getStats()->health = 1;
+	this->mainCharacter->getStats()->sp = 0;
+	finished = false; 
+}
+
+void slava::GameWorld::update() {
 	if (!isAllSet()) return;
 
-	while (window->isOpen())
-	{
-		// Postavljamo kameru
-		camera->update(*customView);
+	// Postavljamo kameru
+	camera->update(*customView);
 
-		sf::Event event;
+	sf::Event event;
 
-		// Uklanjamo karaktere koji su oznaceni za izbacivanje
-		for (auto& id : toBeRemoved) characters.erase(id);
-		toBeRemoved.clear();
+	// Uklanjamo triggere koji su oznaceni za izbacivanje
+	for (auto& id : triggersToBeRemoved) triggers.erase(id);
+	triggersToBeRemoved.clear();
 
-		// Uklanjamo triggere koji su oznaceni za izbacivanje
-		for (auto& id : triggersToBeRemoved) triggers.erase(id);
-		triggersToBeRemoved.clear();
-
-		// Provjeravamo sve triggere
-		for (auto& trigger : triggers) {
+	// Provjeravamo sve triggere
+	for (auto& trigger : triggers) {
+		if (trigger.second->hasFired() && trigger.second->fireOnce) {
+			triggersToBeRemoved.push_back(trigger.second->getID());
+		}
+		else {
 			trigger.second->check(this);
 		}
-		
-		// Updatujemo kontrolu i animacije za ostale karaktere
+	}
+
+	// Uklanjamo karaktere koji su oznaceni za izbacivanje
+	for (auto& id : toBeRemoved) {
+		characters.erase(id);
+	}
+	toBeRemoved.clear();
+
+	// Updatujemo kontrolu i animacije za ostale karaktere
+	for (auto& chars : characters) {
+		chars.second->control();
+		for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
+			chars.second->updateAnimation(i);
+	}
+
+	// Updatujemo kontrolu i animaciju za main karaktera
+	mainCharacter->control();
+
+
+	// Provjeravamo na evente
+	while (window->pollEvent(event))
+	{
+		if (event.type == sf::Event::Closed)
+			window->close();
+
+		// Moramo kontrolu i animacije updateovat posebno u event stanju posto je posebna petlja
+		mainCharacter->control();
+		for (int i = 0; i < mainCharacter->getNumberOfAnimations(); ++i)
+			mainCharacter->updateAnimation(i);
+
 		for (auto& chars : characters) {
 			chars.second->control();
 			for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
 				chars.second->updateAnimation(i);
 		}
 
-		// Updatujemo kontrolu i animaciju za main karaktera
-		mainCharacter->control();
-		
-
-		// Provjeravamo na evente
-		while (window->pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window->close();
-
-			// Moramo kontrolu i animacije updateovat posebno u event stanju posto je posebna petlja
-			mainCharacter->control();
-			for (int i = 0; i < mainCharacter->getNumberOfAnimations(); ++i)
-				mainCharacter->updateAnimation(i);
-
-			for (auto& chars : characters) {
-				chars.second->control();
-				for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
-					chars.second->updateAnimation(i);
-			}
-
-		}
-
-		mainCharacter->updateAnimation(0);
-		
-		// cistimo prozor prije crtanja
-		window->clear();
-
-		// prvo crtamo mapu
-		map->draw(*window);
-
-		// Crtamo ostale karaktere koji nisu mrtvi
-		for (auto& chars : characters) {
-			// if (!chars.second->isDead())
-			chars.second->draw(*window);
-		}
-		// crtamo nas karakter
-		mainCharacter->draw(*window);
-
-		// crtamo drugi layer mape ako postoji
-		map->draw(*window, true);
-
-		// crtamo HUD
-		hud->draw(*window);
-
-		// crtamo eventualne notifikacije
-		notification->update(*window);
-
-		// postavljamo prozor na nas view (zbog kamere)
-		window->setView(*customView);
-		// prikazujemo prozor
-		window->display();
 	}
+
+	mainCharacter->updateAnimation(0);
+
+	// cistimo prozor prije crtanja
+	window->clear();
+
+	// prvo crtamo mapu
+	map->draw(*window);
+
+	// Crtamo ostale karaktere koji nisu mrtvi
+	for (auto& chars : characters) {
+		// if (!chars.second->isDead())
+		chars.second->draw(*window);
+	}
+	// crtamo nas karakter
+	mainCharacter->draw(*window);
+
+	// crtamo drugi layer mape ako postoji
+	map->draw(*window, true);
+
+	// crtamo HUD
+	hud->draw(*window);
+
+	// crtamo eventualne notifikacije
+	notification->update(*window);
+
+	// postavljamo prozor na nas view (zbog kamere)
+	window->setView(*customView);
+	// prikazujemo prozor
+	window->display();
 
 
 }

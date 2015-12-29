@@ -24,13 +24,15 @@ namespace slava
 		// static std::shared_ptr<Notification> instance;
 	public:
 		Notification(FontPtr, sf::Color);
-		void play(char*);
+		void play(const char*);
+		void play(const char*, sf::Time);
 		void setDuration(sf::Time);
 		void update(sf::RenderWindow& win);
 		int getMessageWidth();
 		void setColor(sf::Color);
 		void setPosition(int, int);
 		void setValues(FontPtr, sf::Color);
+		void clear();
 	};
 }
 

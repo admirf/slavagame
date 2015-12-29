@@ -79,8 +79,10 @@ void slava::EnemyController::control(Character* enemy) {
 		
 		hit = true;
 		enemy->playAnimation(0);
-		this->player->getStats()->health -= 0.05;
-		this->player->gotHit(true);
+		if (!this->player->isBlock) {
+			this->player->getStats()->health -= 0.1;
+			this->player->gotHit(true);
+		}
 		enemy->moveRandom();
 		clock1.restart();
 	
@@ -93,11 +95,12 @@ void slava::EnemyController::control(Character* enemy) {
 	if (dist <= 20 && this->player->isAttack) {
 
 		enemy->getStats()->health -= this->player->getStats()->level * 0.01;
-
 		enemy->gotHit(false);
 
 		if (enemy->isDead()) {
+			std::cout << " ID " << enemy->getID() << '\n';
 			enemy->getGameWorld()->removeCharacter(enemy->getID());
+			
 			this->player->getGameWorld()->getNotification()->play("You killed the mamojebac!");
 			// enemy->alive();
 			// enemy->getSprite()->setPosition(0, 0);
