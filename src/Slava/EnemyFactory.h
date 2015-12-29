@@ -11,10 +11,10 @@ namespace slava
 	class EnemyFactory
 	{
 	public:
-		static std::shared_ptr<Character> createBasicEnemy(std::shared_ptr<Character> player, int x, int y) {
+		static std::shared_ptr<Character> createBasicEnemy(const char* id, std::shared_ptr<Character> player, int x, int y) {
 			auto controller = new EnemyController(player);
 			controller->reattack = sf::milliseconds(2000);
-			auto enemy = std::make_shared<Character>();
+			auto enemy = std::make_shared<Character>(id);
 			enemy->setController(controller);
 			enemy->limit = 1.2;
 			enemy->setTexture(loadTexture("Main-Character.png"));

@@ -14,6 +14,18 @@ slava::Map::Map(const char* path, TexturePtr texture, MapSize ms, int blockSize)
 	tileTemplates.push_back(slava::TileFactory::createNonRigidTile());
 	tileTemplates.push_back(slava::TileFactory::createNonWalkable());
 
+	// non walkable tileovi
+	std::ifstream blockf("blockable.txt");
+	if (blockf.fail()) {
+		std::cout << "Nema blockable.txt" << std::endl;
+	}
+	char tmp;
+	bool blockable[30]{};
+	while (blockf >> tmp) {
+		blockable[tmp - 'a'] = true;
+	}
+	blockf.close();
+
 	int defaultIndex = 0; // po default bacamo referencu na rigidTile u mapu
 
 	this->blockSize = blockSize;
@@ -52,54 +64,33 @@ slava::Map::Map(const char* path, TexturePtr texture, MapSize ms, int blockSize)
 			// block->setPosition(j * blockSize, i * blockSize);
 			// std::cout << c << '\n';
 
-			// Switch mi treba da odredim koju teksturu da dam quadu i koju referencu na Tile iz tile templejta da spasim na j, i koordinatu mape
-			switch (c) {
-			case '0':
-				tmp = slava::getQuad(0, blockSize, posX, posY);
-				defaultIndex = 0;
-				break;
-			case '1':
-				tmp = slava::getQuad(1, blockSize, posX, posY);
-				defaultIndex = 0;
-				break;
-			case '2':
-				tmp = slava::getQuad(2, blockSize, posX, posY);
-				defaultIndex = 0;
-				break;
-			default:
-				bool flag = false;
-				for (int i = 3; i <= 22; ++i) {
-					if (c == i + 'a' - 3) {
-						flag = true;
-						// std::cout << "Dodje dovde "<< c - 'a' + 3 << std::endl;
-						tmp = slava::getQuad(i, blockSize, posX, posY);
-					}
-				}
-				if (!flag) {
-					tmp = slava::getQuad(0, blockSize, posX, posY);
-				}
-				defaultIndex = 0;
+			tmp = getQuad(0, blockSize, posX, posY);
 
+			// Switch mi treba da odredim koju teksturu da dam quadu i koju referencu na Tile iz tile templejta da spasim na j, i koordinatu mape
+			for (int i = 'a'; i < 'z'; ++i) {
+				if (c == i) {
+					if (c == 'd') defaultIndex = 1;
+					else if (blockable[c - 'a']) defaultIndex = 2;
+					else defaultIndex = 0;
+					tmp = getQuad(i - 'a', blockSize, posX, posY);
+					break;
+				}
 			}
 
 			// Sad posto napravimo posebno quad, koji je sam tipa VertexArray, moramo ga dodat u pseudomultidimenzionalni niz quadova
-			int index = (i + j * sizeY) * 4;
-			array[index] = tmp[0];
-			array[index + 1] = tmp[1];
-			array[index + 2] = tmp[2];
-			array[index + 3] = tmp[3];
-
-			// std::cout << c;
-
-			// drugi layer
-			if (defaultIndex == 1 || defaultIndex == 2) {
-				
+			if (!defaultIndex) {
+				int index = (i + j * sizeY) * 4;
+				array[index] = tmp[0];
+				array[index + 1] = tmp[1];
+				array[index + 2] = tmp[2];
+				array[index + 3] = tmp[3];
+			}
+			else {
 				secondLayer.append(tmp[0]);
 				secondLayer.append(tmp[1]);
 				secondLayer.append(tmp[2]);
 				secondLayer.append(tmp[3]);
 			}
-			
 
 			// spasavamo odgovarajucu referencu tile-a na poziciju da kasnije mozemo znat osobine tile-a na ovoj koordinati
 			this->map[i][j] = tileTemplates[defaultIndex]; 

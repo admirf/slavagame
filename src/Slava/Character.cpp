@@ -37,6 +37,10 @@ void slava::Character::alive() {
 	this->stats->health = 1;
 }
 
+const char* slava::Character::getID() {
+	return this->id;
+}
+
 void slava::Character::init() {
 	vX = 0;
 	vY = 0;
@@ -47,12 +51,14 @@ void slava::Character::init() {
 	stats->sp = 0;
 }
 
-slava::Character::Character() {
+slava::Character::Character(const char* id) {
 	sprite = new sf::Sprite();
 	init();
+	this->id = id;
 }
 
-slava::Character::Character(sf::Texture* text) {
+slava::Character::Character(const char* id, sf::Texture* text) {
+	this->id = id;
 	sprite = new sf::Sprite();
 	sprite->setTexture(*text);
 	// originalColor = sprite->getColor();

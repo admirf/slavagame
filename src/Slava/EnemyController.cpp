@@ -97,9 +97,10 @@ void slava::EnemyController::control(Character* enemy) {
 		enemy->gotHit(false);
 
 		if (enemy->isDead()) {
+			enemy->getGameWorld()->removeCharacter(enemy->getID());
 			this->player->getGameWorld()->getNotification()->play("You killed the mamojebac!");
-			enemy->alive();
-			enemy->getSprite()->setPosition(0, 0);
+			// enemy->alive();
+			// enemy->getSprite()->setPosition(0, 0);
 			this->player->getStats()->sp += 200;
 		}
 		/* sf::Thread th(&Character::gotHit, enemy);

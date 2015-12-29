@@ -10,7 +10,15 @@ void slava::GameWorld::setMainCharacter(CharacterPtr character) {
 }
 
 void slava::GameWorld::addCharacter(CharacterPtr character) {
-	characters.push_back(character);
+	characters[character->getID()] = character;
+}
+
+void slava::GameWorld::removeCharacter(const char* id) {
+	toBeRemoved.push_back(id);
+}
+
+std::unordered_map<const char*, slava::CharacterPtr> slava::GameWorld::getCharacters() {
+	return characters;
 }
 
 void slava::GameWorld::setCamera(Camera* cam) {
@@ -52,12 +60,16 @@ void slava::GameWorld::start() {
 		camera->update(*customView);
 
 		sf::Event event;
+
+		// Uklanjamo karaktere koji su oznaceni za izbacivanje
+		for (auto& id : toBeRemoved) characters.erase(id);
+		toBeRemoved.clear();
 		
 		// Updatujemo kontrolu i animacije za ostale karaktere
-		for (auto chars : characters) {
-			chars->control();
-			for (int i = 0; i < chars->getNumberOfAnimations(); ++i)
-				chars->updateAnimation(i);
+		for (auto& chars : characters) {
+			chars.second->control();
+			for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
+				chars.second->updateAnimation(i);
 		}
 
 		// Updatujemo kontrolu i animaciju za main karaktera
@@ -75,10 +87,10 @@ void slava::GameWorld::start() {
 			for (int i = 0; i < mainCharacter->getNumberOfAnimations(); ++i)
 				mainCharacter->updateAnimation(i);
 
-			for (auto chars : characters) {
-				chars->control();
-				for (int i = 0; i < chars->getNumberOfAnimations(); ++i)
-					chars->updateAnimation(i);
+			for (auto& chars : characters) {
+				chars.second->control();
+				for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
+					chars.second->updateAnimation(i);
 			}
 
 		}
@@ -92,9 +104,9 @@ void slava::GameWorld::start() {
 		map->draw(*window);
 
 		// Crtamo ostale karaktere koji nisu mrtvi
-		for (auto chars : characters) {
-			if (!chars->isDead())
-				chars->draw(*window);
+		for (auto& chars : characters) {
+			// if (!chars.second->isDead())
+			chars.second->draw(*window);
 		}
 		// crtamo nas karakter
 		mainCharacter->draw(*window);

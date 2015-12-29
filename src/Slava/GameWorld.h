@@ -6,8 +6,9 @@
 #include "Notification.h"
 #include "HUD.h"
 #include "Map.h"
-#include <vector>
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
 namespace slava 
 {
@@ -17,7 +18,8 @@ namespace slava
 	private:
 		sf::RenderWindow* window;
 		CharacterPtr mainCharacter;
-		std::vector<CharacterPtr> characters;
+		std::unordered_map<const char*, CharacterPtr> characters;
+		std::vector<const char*> toBeRemoved;
 		Camera* camera;
 		HUD* hud;
 		Notification* notification;
@@ -29,6 +31,8 @@ namespace slava
 		GameWorld(sf::RenderWindow*, Map*);
 		void setMainCharacter(CharacterPtr);
 		void addCharacter(CharacterPtr);
+		void removeCharacter(const char*);
+		std::unordered_map<const char*, CharacterPtr> getCharacters();
 		void setCamera(Camera*);
 		void setHUD(HUD*);
 		void setNotification(Notification*);

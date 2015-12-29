@@ -39,6 +39,7 @@ namespace slava
 	{
 	private:
 
+		const char* id;
 		GameWorldPtr world;
 		std::vector<Animation> animations;
 		Map* worldMap;
@@ -63,12 +64,13 @@ namespace slava
 	public:
 		bool isAttack;
 		double limit = 2;
-		Character();
-		Character(sf::Texture*);
+		Character(const char*);
+		Character(const char*, sf::Texture*);
 		void init();
 		Stats* getStats();
 		sf::Sprite* getSprite();
 		void setStats(Stats*);
+		const char* getID();
 
 		void setGameWorld(GameWorldPtr);
 		GameWorldPtr getGameWorld();

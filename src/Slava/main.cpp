@@ -20,7 +20,7 @@ using namespace slava;
 int main()
 {
 	// Resursi
-	auto txt = loadTexture("new_tileset.png");
+	auto txt = loadTexture("tileset1.png");
 	auto font = loadFont("sgs.ttf");
 
 	// Prozor
@@ -29,14 +29,14 @@ int main()
 	window.setKeyRepeatEnabled(true);
 
 	// Mapa
-	MapSize ms = getMapSize("mapa.txt");
-	Map map("mapa.txt", txt, ms, 16);
+	MapSize ms = getMapSize("mapa1.txt");
+	Map map("mapa1.txt", txt, ms, 16);
 
 	// kreacija svijeta, mora bit poslije mape i prozora, a prije charactera da bi mogli stavit u character referencu na game world
 	auto world = make_shared<GameWorld>(&window, &map);
 
 	// Main character
-	auto character = make_shared<Character>();
+	auto character = make_shared<Character>("feha");
 	character->setMap(&map);
 	character->setTexture(loadTexture("Main-Character.png"));
 	character->setController(new KeyController());
@@ -50,9 +50,13 @@ int main()
 	character->addAnimation(anim);
 
 	// Neprijatelj
-	auto enemy = EnemyFactory::createBasicEnemy(character, 200, 400);
+	auto enemy = EnemyFactory::createBasicEnemy("enemy1", character, 200, 400);
 	enemy->addAnimation(anim);
 	enemy->setGameWorld(world);
+	auto enemy2 = EnemyFactory::createBasicEnemy("enemy2", character, 200, 400);
+	enemy2->addAnimation(anim);
+	enemy2->setGameWorld(world);
+	enemy2->getSprite()->setPosition(0, 500);
 
 	// HUD, Notifikacije i Kamera
 	HUD hud(character->getStats(), font);
@@ -67,6 +71,7 @@ int main()
 	// Spajamo sve u jedan svijet
 	world->setMainCharacter(character);
 	world->addCharacter(enemy);
+	world->addCharacter(enemy2);
 	world->setCamera(&cam);
 	world->setHUD(&hud);
 	world->setNotification(&notification);
