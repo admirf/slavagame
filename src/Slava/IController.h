@@ -1,5 +1,5 @@
-#ifndef ICONTROLLER_H
-#define ICONTROLLER_H
+#ifndef __ICONTROLLER_H
+#define __ICONTROLLER_H
 
 namespace slava
 {

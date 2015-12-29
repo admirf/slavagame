@@ -1,5 +1,6 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef __MAP_H
+#define __MAP_H
+
 #include "Tile.h"
 #include "TileFactory.h"
 #include <SFML\Graphics.hpp>

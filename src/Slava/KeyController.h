@@ -1,5 +1,5 @@
-#ifndef KEY_CONTROLLER_H
-#define KEY_CONTROLLER_H
+#ifndef __KEY_CONTROLLER_H
+#define __KEY_CONTROLLER_H
 
 #include "IController.h"
 #include "Character.h"

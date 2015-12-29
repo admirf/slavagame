@@ -1,5 +1,5 @@
-#ifndef ENEMY_FACTORY_H
-#define ENEMY_FACTORY_H
+#ifndef __ENEMY_FACTORY_H
+#define __ENEMY_FACTORY_H
 
 #include "Character.h"
 #include "EnemyController.h"

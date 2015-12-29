@@ -1,5 +1,5 @@
-#ifndef STATS_H
-#define STATS_H
+#ifndef __STATS_H
+#define __STATS_H
 
 namespace slava
 {

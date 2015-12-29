@@ -17,6 +17,15 @@
 using namespace std;
 using namespace slava;
 
+bool sampleFunction(GameWorld* world) {
+	if (world->getMainCharacter()->getSprite()->getPosition().x > 250) return true;
+	else return false;
+}
+
+void exec(GameWorld* world) {
+	world->getNotification()->play("Radi yeeeeaaaaah!!!!");
+}
+
 int main()
 {
 	// Resursi
@@ -34,6 +43,11 @@ int main()
 
 	// kreacija svijeta, mora bit poslije mape i prozora, a prije charactera da bi mogli stavit u character referencu na game world
 	auto world = make_shared<GameWorld>(&window, &map);
+
+	// Trigger
+	Trigger trigger("prvi");
+	trigger.setRun(exec);
+	trigger.setTrigger(sampleFunction);
 
 	// Main character
 	auto character = make_shared<Character>("feha");
@@ -76,6 +90,7 @@ int main()
 	world->setHUD(&hud);
 	world->setNotification(&notification);
 	world->setView(&customView);
+	world->addTrigger(&trigger);
 
 	// Pokrecemo svijet
 	world->start();

@@ -17,6 +17,18 @@ void slava::GameWorld::removeCharacter(const char* id) {
 	toBeRemoved.push_back(id);
 }
 
+void slava::GameWorld::addTrigger(Trigger* t) {
+	triggers[t->getID()] = t;
+}
+
+void slava::GameWorld::removeTrigger(const char* id) {
+	triggersToBeRemoved.push_back(id);
+}
+
+std::unordered_map<const char*, slava::Trigger*> slava::GameWorld::getTriggers() {
+	return triggers;
+}
+
 std::unordered_map<const char*, slava::CharacterPtr> slava::GameWorld::getCharacters() {
 	return characters;
 }
@@ -50,6 +62,9 @@ slava::Notification* slava::GameWorld::getNotification() {
 	return notification;
 }
 
+slava::CharacterPtr slava::GameWorld::getMainCharacter() {
+	return mainCharacter;
+}
 
 void slava::GameWorld::start() {
 	if (!isAllSet()) return;
@@ -64,6 +79,15 @@ void slava::GameWorld::start() {
 		// Uklanjamo karaktere koji su oznaceni za izbacivanje
 		for (auto& id : toBeRemoved) characters.erase(id);
 		toBeRemoved.clear();
+
+		// Uklanjamo triggere koji su oznaceni za izbacivanje
+		for (auto& id : triggersToBeRemoved) triggers.erase(id);
+		triggersToBeRemoved.clear();
+
+		// Provjeravamo sve triggere
+		for (auto& trigger : triggers) {
+			trigger.second->check(this);
+		}
 		
 		// Updatujemo kontrolu i animacije za ostale karaktere
 		for (auto& chars : characters) {

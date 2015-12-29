@@ -1,5 +1,6 @@
-#ifndef TILE_FACTORY_H
-#define TILE_FACTORY_H
+#ifndef __TILE_FACTORY_H
+#define __TILE_FACTORY_H
+
 #include "Tile.h"
 #include "Utility.h"
 #include <memory>

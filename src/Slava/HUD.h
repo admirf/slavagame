@@ -1,5 +1,5 @@
-#ifndef HUD_H
-#define HUD_H
+#ifndef __HUD_H
+#define __HUD_H
 
 #include <SFML\Graphics.hpp>
 #include "Utility.h"

@@ -1,5 +1,5 @@
-#ifndef ENEMY_CONTROLLER_H
-#define ENEMY_CONTROLLER_H
+#ifndef __ENEMY_CONTROLLER_H
+#define __ENEMY_CONTROLLER_H
 
 #include <memory>
 #include "Character.h"

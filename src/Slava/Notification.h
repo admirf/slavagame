@@ -1,5 +1,6 @@
-#ifndef NOTIFICATION_H
-#define NOTIFICATION_H
+#ifndef __NOTIFICATION_H
+#define __NOTIFICATION_H
+
 #include <SFML\Graphics.hpp>
 #include <memory>
 #include <string>

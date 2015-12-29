@@ -1,5 +1,5 @@
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef __CHARACTER_H
+#define __CHARACTER_H
 
 #include <SFML\Graphics.hpp>
 #include "IController.h"
