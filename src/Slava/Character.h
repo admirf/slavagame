@@ -13,6 +13,9 @@ namespace slava
 {
 	class Animation;
 	class GameWorld;
+
+	enum skills { STRENGTH, ENDURANCE, MANA };
+
 	typedef std::shared_ptr<GameWorld> GameWorldPtr;
 	/*
 	Character je fancy klasa koja wrappuje sf::Sprite i nasljedjuje sf::Transformable (da bi se lakse pomjero karakter)
@@ -56,6 +59,7 @@ namespace slava
 		bool hit = false;
 
 		Stats* stats;
+		bool hasLeveledUp = false;
 
 		// Ogranicenje za ubrzanje da ne bi u beskonacnost ubrzavo
 		
@@ -107,6 +111,8 @@ namespace slava
 		*/
 
 		void levelUp();
+		void increaseSkill(skills);
+		bool canIncreaseSkill();
 		void setController(IController*);
 		void control();
 

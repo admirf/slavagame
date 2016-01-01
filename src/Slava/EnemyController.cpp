@@ -94,14 +94,14 @@ void slava::EnemyController::control(Character* enemy) {
 	// provjeri da li je enemy ubijen i ako jeste dodaj igracu sp-a
 	if (dist <= 20 && this->player->isAttack) {
 
-		enemy->getStats()->health -= this->player->getStats()->level * 0.01;
+		enemy->getStats()->health -= this->player->getStats()->strength * 0.01;
 		enemy->gotHit(false);
 
 		if (enemy->isDead()) {
 			std::cout << " ID " << enemy->getID() << '\n';
 			enemy->getGameWorld()->removeCharacter(enemy->getID());
 			
-			this->player->getGameWorld()->getNotification()->play("You killed the mamojebac!");
+			this->player->getGameWorld()->getNotification()->play("Skill points increased");
 			// enemy->alive();
 			// enemy->getSprite()->setPosition(0, 0);
 			this->player->getStats()->sp += 200;

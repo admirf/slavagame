@@ -25,6 +25,15 @@ namespace slava
 		// Evo je control metoda
 		void control(Character* character) {
 
+			// Provjeri jel skupljeno spa za level up
+			int lvl = character->getStats()->level;
+			if ((lvl + lvl / 4) * 1000 < character->getStats()->sp) {
+				character->levelUp();
+				// otvori Skill View
+				character->getGameWorld()->getView("skillUI")->active = true;
+				character->getGameWorld()->pause();
+			}
+
 			int x = character->getSprite()->getPosition().x;
 			int y = character->getSprite()->getPosition().y;
 

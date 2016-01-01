@@ -48,8 +48,11 @@ void slava::Character::init() {
 	stats->acceleration = 0.5;
 	stats->health = 1;
 	stats->level = 1;
+	stats->endurance = 1;
+	stats->strength = 1;
+	stats->mana = 1;
+	stats->limit = 2;
 	stats->sp = 0;
-	stats->limit = limit;
 }
 
 slava::Character::Character(const char* id) {
@@ -158,23 +161,43 @@ void slava::Character::moveRandom() {
 }
 
 void slava::Character::moveRight() {
-	vX = MIN(((vX > 0) ? vX : -vX) + stats->acceleration, stats->limit * stats->level);
+	vX = MIN(((vX > 0) ? vX : -vX) + stats->acceleration, stats->limit * stats->endurance);
 }
 
 void slava::Character::moveLeft() {
-	vX = MAX(((vX > 0) ? -vX : vX) - stats->acceleration, -stats->limit * stats->level);
+	vX = MAX(((vX > 0) ? -vX : vX) - stats->acceleration, -stats->limit * stats->endurance);
 }
 
 void slava::Character::moveDown() {
-	vY = MIN(((vY > 0) ? vY : -vY) + stats->acceleration, stats->limit * stats->level);
+	vY = MIN(((vY > 0) ? vY : -vY) + stats->acceleration, stats->limit * stats->endurance);
 }
 
 void slava::Character::moveUp() {
-	vY = MAX(((vY > 0) ? -vY : vY) - stats->acceleration, -stats->limit * stats->level);
+	vY = MAX(((vY > 0) ? -vY : vY) - stats->acceleration, -stats->limit * stats->endurance);
 }
 
 void slava::Character::levelUp() {
-	stats->level += 0.25;
+	++stats->level;
+	hasLeveledUp = true;
+}
+
+void slava::Character::increaseSkill(skills skill) {
+	switch (skill) {
+	case STRENGTH:
+		stats->strength += 0.15;
+		break;
+	case ENDURANCE:
+		stats->endurance += 0.15;
+		break;
+	case MANA:
+		stats->mana += 0.15;
+		break;
+	}
+	hasLeveledUp = false;
+}
+
+bool slava::Character::canIncreaseSkill() {
+	return hasLeveledUp;
 }
 
 /* Nadajmo se da nikad nece trebat

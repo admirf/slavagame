@@ -10,6 +10,7 @@
 #include "TileFactory.h"
 #include "Notification.h"
 #include "GameWorld.h"
+#include "SkillView.h"
 #include <iostream>
 #define WIN_SIZE_X 1000
 #define WIN_SIZE_Y 600
@@ -35,12 +36,10 @@ bool sampleFunction(GameWorld* world) {
 }
 
 void exec(GameWorld* world) {
-	cout << "hahaha" << endl;
-	diff += 0.10;
+	diff += 0.05;
 	auto enemy = EnemyFactory::createBasicEnemy("enemy", world->getMainCharacter(), rand() % WIN_SIZE_X, rand() % WIN_SIZE_Y);
 	enemy->getStats()->health += diff;
 	enemy->getStats()->limit += diff;
-	world->getMainCharacter()->getStats()->limit += diff;
 	enemy->addAnimation(*world->getAnimation("hit"));
 	enemy->setGameWorld(world);
 	world->addCharacter(enemy);
@@ -82,7 +81,7 @@ int main()
 	character->setMap(&map);
 	character->setTexture(loadTexture("Main-Character.png"));
 	character->setController(new KeyController());
-	character->getStats()->health = 0.5;
+	character->getStats()->health = 1;
 	character->getStats()->sp = 0;
 	character->setGameWorld(world);
 	character->getSprite()->setPosition(15 * BLOCK_SIZE, BLOCK_SIZE);
@@ -97,6 +96,11 @@ int main()
 	enemy->addAnimation(anim);
 	enemy->setGameWorld(world);
 
+	// Skill UI
+	auto skillView = make_shared<SkillView>(*font);
+	skillView->active = false;
+	skillView->id = "skillUI";
+	
 	// HUD, Notifikacije i Kamera
 	HUD hud(character->getStats(), font);
 	Notification notification(font, sf::Color::Red);
@@ -113,6 +117,7 @@ int main()
 	world->addCharacter(enemy);
 	world->setCamera(&cam);
 	world->setHUD(&hud);
+	world->addView(skillView.get());
 	world->setNotification(&notification);
 	world->setView(&customView);
 	world->addTrigger(&trigger);
@@ -148,7 +153,9 @@ int main()
 		}
 	}
 
+	// delete skillView;
 	delete world;
+	
 
 	return 0;
 }

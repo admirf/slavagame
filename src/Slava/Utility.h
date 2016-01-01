@@ -13,6 +13,12 @@ namespace slava
 {
 	typedef std::shared_ptr<sf::Font> FontPtr;
 	typedef std::shared_ptr<sf::Texture> TexturePtr;
+
+	// Check if coordinates are in rectangle
+	static bool contains(sf::RectangleShape& shape, int x, int y) {
+		return shape.getGlobalBounds().contains(sf::Vector2f(x, y));
+	}
+
 	// Pomocna funkcija za brzo formiranje quada u mapi
 	static sf::VertexArray getQuad(int textureIndex, int size, int x, int y) {
 

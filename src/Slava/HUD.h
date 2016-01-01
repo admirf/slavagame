@@ -20,6 +20,9 @@ namespace slava
 	class HUD
 	{
 	private:
+		sf::Text health_text;
+		sf::Text sp_text;
+		sf::Text lvl_text;
 		Stats* stats;
 		FontPtr font;
 		int x = 0, y = 0;

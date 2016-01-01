@@ -8,6 +8,7 @@
 #include "HUD.h"
 #include "Map.h"
 #include "Trigger.h"
+#include "View.h"
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -23,8 +24,10 @@ namespace slava
 		std::unordered_map<const char*, CharacterPtr> characters;
 		std::unordered_map<const char*, Trigger*> triggers;
 		std::unordered_map<const char*, Animation*> animations;
+		std::unordered_map<const char*, View*> views;
 		std::vector<const char*> toBeRemoved;
 		std::vector<const char*> triggersToBeRemoved;
+		
 		Camera* camera;
 		HUD* hud;
 		Notification* notification;
@@ -32,9 +35,12 @@ namespace slava
 		Map* map;
 		bool isSet[5];
 		bool finished = false;
+		bool isPaused = false;
 
 	public:
 		GameWorld(sf::RenderWindow*, Map*);
+		void addView(View*);
+		View* getView(const char*);
 		void setMainCharacter(CharacterPtr);
 		void addCharacter(CharacterPtr);
 		void addCharacters(std::vector<CharacterPtr>&);
@@ -55,7 +61,9 @@ namespace slava
 		bool isFinished();
 		void finish();
 		void restart();
-
+		void pause();
+		void unpause();
+		sf::RenderWindow* getWindow();
 		Notification* getNotification();
 	};
 }

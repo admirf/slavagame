@@ -91,6 +91,21 @@ void slava::GameWorld::restart() {
 	finished = false; 
 }
 
+sf::RenderWindow* slava::GameWorld::getWindow() {
+	return this->window;
+}
+
+void slava::GameWorld::addView(View* view) {
+	views[view->id] = view;
+}
+
+slava::View* slava::GameWorld::getView(const char* id) {
+	return views[id];
+}
+
+void slava::GameWorld::pause() { isPaused = true; }
+void slava::GameWorld::unpause() { isPaused = false; }
+
 void slava::GameWorld::update() {
 	if (!isAllSet()) return;
 
@@ -121,13 +136,15 @@ void slava::GameWorld::update() {
 
 	// Updatujemo kontrolu i animacije za ostale karaktere
 	for (auto& chars : characters) {
-		chars.second->control();
+		if(!isPaused)
+			chars.second->control();
 		for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
 			chars.second->updateAnimation(i);
 	}
 
 	// Updatujemo kontrolu i animaciju za main karaktera
-	mainCharacter->control();
+	if(!isPaused)
+		mainCharacter->control();
 
 
 	// Provjeravamo na evente
@@ -136,13 +153,21 @@ void slava::GameWorld::update() {
 		if (event.type == sf::Event::Closed)
 			window->close();
 
+		// Kontrola viewova, tj. UI elemenata
+		for (auto& view : views) { 
+			if(view.second->active)
+				view.second->control(this);
+		}
+
 		// Moramo kontrolu i animacije updateovat posebno u event stanju posto je posebna petlja
-		mainCharacter->control();
+		if(!isPaused)
+			mainCharacter->control();
 		for (int i = 0; i < mainCharacter->getNumberOfAnimations(); ++i)
 			mainCharacter->updateAnimation(i);
 
 		for (auto& chars : characters) {
-			chars.second->control();
+			if(!isPaused)
+				chars.second->control();
 			for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
 				chars.second->updateAnimation(i);
 		}
@@ -173,6 +198,12 @@ void slava::GameWorld::update() {
 
 	// crtamo eventualne notifikacije
 	notification->update(*window);
+
+	// crtamo Viewove, ili ti ga UI elemente
+	for (auto& view : views) {
+		if(view.second->active)
+			view.second->draw(*this->window);
+	}
 
 	// postavljamo prozor na nas view (zbog kamere)
 	window->setView(*customView);

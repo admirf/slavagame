@@ -13,9 +13,11 @@ namespace slava
 	public:
 		double health;
 		double acceleration;
-		// level ide po 0.25 napredak pa cemo mnozit sa nekim stvarima, lakse nego kompleksno levelovanje
-		// Sistem levelovanja i skilova cemo detaljnije izradit kasnije
-		double level;
+		// level sistem revamped
+		int level;
+		double strength;
+		double endurance;
+		double mana;
 		double limit;
 		bool hit = false;
 		int sp; // skill points
