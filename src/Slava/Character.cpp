@@ -273,20 +273,77 @@ slava::Map* slava::Character::getMap() {
 	return this->worldMap;
 }
 
-// Ovo nek stoji zasad mada je daleko netacno ne mogu se smarat vise veceras
-bool slava::Character::isValidMovementPoint(double x, double y) {
-	int j = ((int)x + this->sprite->getGlobalBounds().width/2 - 1) / worldMap->getTileSize();
-    int i = (int)y / worldMap->getTileSize();
-	// 
-	int pixelLength = this->sprite->getGlobalBounds().height / worldMap->getTileSize();
-	for (int k = i; k <= pixelLength + i; ++k) {
-		if (j < 0 || k < 0 || j >= worldMap->getSize().x || k >= worldMap->getSize().y) return false;
-		if (!worldMap->tileAt(j, k)->isWalkable) return false;
-	}
-	
-	std::cout << j << ':' << i << ' ' << worldMap->tileAt(j, i)->isWalkable << '\n';
+bool slava::Character::canBeHere(int x, int y) {
+	x = x / worldMap->getTileSize();
+	y = y / worldMap->getTileSize();
+
+	if (worldMap->isOutOfRange(x, y)) return false;
+	if (!worldMap->tileAt(x, y)->isWalkable) return false;
+
 	return true;
 }
+
+bool slava::Character::isWalkableVertical(int x, int y, int z) {
+	x = x / worldMap->getTileSize();
+	y = y / worldMap->getTileSize();
+	z = z / worldMap->getTileSize();
+
+	if (worldMap->isOutOfRange(z, x) || worldMap->isOutOfRange(y, x)) return false;
+
+	for (int i = y; i <= z; ++i) {
+		if (!worldMap->tileAt(i, x)->isWalkable) return false;
+	}
+	
+	return true;
+}
+
+bool slava::Character::isWalkableHorizontal(int x, int y, int z) {
+	x = x / worldMap->getTileSize();
+	y = y / worldMap->getTileSize();
+	z = z / worldMap->getTileSize();
+
+	if (worldMap->isOutOfRange(x, y) || worldMap->isOutOfRange(x, z)) return false;
+
+	for (int i = y; i <= z; ++i) {
+		if (!worldMap->tileAt(x, i)->isWalkable) return false;
+	}
+
+	return true;
+}
+
+bool slava::Character::canMoveUp() {
+	int y = this->sprite->getPosition().y - 1;
+	int x1 = this->sprite->getPosition().x;
+	int x2 = x1 + this->sprite->getGlobalBounds().width - 1;
+
+	return isWalkableVertical(y, x1, x2);
+}
+
+bool slava::Character::canMoveDown() {
+	int y = this->sprite->getPosition().y + this->sprite->getGlobalBounds().height + 1;
+	int x1 = this->sprite->getPosition().x;
+	int x2 = x1 + this->sprite->getGlobalBounds().width - 1;
+
+	return isWalkableVertical(y, x1, x2);
+}
+
+bool slava::Character::canMoveLeft() {
+	int x = this->sprite->getPosition().x - 1;
+	int y1 = this->sprite->getPosition().y;
+	int y2 = y1 + this->sprite->getGlobalBounds().height - 1;
+
+	return isWalkableHorizontal(x, y1, y2);
+}
+
+bool slava::Character::canMoveRight() {
+	int x = this->sprite->getPosition().x + this->sprite->getGlobalBounds().width + 1;
+	int y1 = this->sprite->getPosition().y;
+	int y2 = y1 + this->sprite->getGlobalBounds().height - 1;
+
+	return isWalkableHorizontal(x, y1, y2);
+}
+
+
 
 int slava::Character::getNumberOfAnimations() {
 	return animations.size();

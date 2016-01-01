@@ -65,6 +65,9 @@ namespace slava
 		
 		IController* controller;
 
+		bool isWalkableVertical(int, int, int);
+		bool isWalkableHorizontal(int, int, int);
+
 	public:
 		bool isAttack;
 		bool isBlock;
@@ -97,10 +100,14 @@ namespace slava
 		void stopDown();
 		void stopLeft();
 		void stopRight();
+		bool canMoveUp();
+		bool canMoveDown();
+		bool canMoveRight();
+		bool canMoveLeft();
 		bool isDead();
 		void alive();
 		void gotHit(bool);
-		bool isValidMovementPoint(double x, double y);
+		bool canBeHere(int, int);
 		Position getPositionOnTile(int);
 		
 		/*

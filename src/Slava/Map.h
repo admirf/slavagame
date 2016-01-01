@@ -35,6 +35,7 @@ namespace slava
 		TexturePtr texture;
 	public:
 		Map(const char*, TexturePtr, MapSize, int);
+		bool isOutOfRange(int, int);
 		void draw(sf::RenderWindow& win, bool isLayer=false);
 		std::shared_ptr<Tile> tileAt(int, int);
 		MapSize getSize();

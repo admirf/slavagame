@@ -47,28 +47,28 @@ namespace slava
 			// Obicna kontrola kretnje, ako tipka nije stisnuta treba zaustavljat karakter u tom smjeru
 			// Ove provjere valid movement point ovo ja sad cisto onako da vidim bil funkcionisalo i evo bi
 			// naravno ova sad implementacija za koliziju je dosta neprecizna i treba za svaki smjer napravit posebno provjeru mozel se ic dalje
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && character->isValidMovementPoint(x, y + 2)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && character->canMoveDown()) {
 				character->moveDown();
 			}
 			else {
 				character->stopDown();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && character->isValidMovementPoint(x + 1, y)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && character->canMoveRight()) {
 				character->moveRight();
 			}
 			else {
 				character->stopRight();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && character->isValidMovementPoint(x, y - 2)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && character->canMoveUp()) {
 				character->moveUp();
 			}
 			else {
 				character->stopUp();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && character->isValidMovementPoint(x - 1, y)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && character->canMoveLeft()) {
 				character->moveLeft();
 			}
 			else {

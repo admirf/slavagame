@@ -142,6 +142,11 @@ int slava::Map::getTileSize() {
 	return blockSize;
 }
 
+bool slava::Map::isOutOfRange(int x, int y) {
+	if (x < 0 || y < 0 || x >= this->mapSize.x || y >= this->mapSize.y) return true;
+	return false;
+}
+
 slava::MapSize slava::Map::getSize() {
 	return this->mapSize;
 }
