@@ -30,7 +30,7 @@ namespace slava
 			if ((lvl + lvl / 4) * 1000 < character->getStats()->sp) {
 				character->levelUp();
 				// otvori Skill View
-				character->getGameWorld()->getView("skillUI")->active = true;
+				character->getGameWorld()->getUI("skillUI")->active = true;
 				character->getGameWorld()->pause();
 			}
 

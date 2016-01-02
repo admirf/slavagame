@@ -225,6 +225,12 @@ void slava::Character::clearCollidableCharacters() {
 }
 */
 
+void slava::Character::setDialog(std::shared_ptr<DialogNode>& node) {
+	this->dialog = node;
+}
+
+std::shared_ptr<slava::DialogNode> slava::Character::getDialog() { return dialog; }
+
 bool slava::Character::isDead() {
 	if (this->stats->health < 0) return true;
 	return false;

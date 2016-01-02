@@ -95,13 +95,27 @@ sf::RenderWindow* slava::GameWorld::getWindow() {
 	return this->window;
 }
 
-void slava::GameWorld::addView(View* view) {
+void slava::GameWorld::addUI(UI* view) {
 	views[view->id] = view;
 }
 
-slava::View* slava::GameWorld::getView(const char* id) {
+slava::UI* slava::GameWorld::getUI(const char* id) {
 	return views[id];
 }
+
+void slava::GameWorld::addDialog(std::shared_ptr<DialogNode> dialog, const char* key) {
+	dialogs[key] = dialog;
+}
+
+std::shared_ptr<slava::DialogNode> slava::GameWorld::getDialog(const char* key) {
+	return dialogs[key];
+}
+
+void slava::GameWorld::setCurrentDialog(const char* key) {
+	currentDialog = dialogs[key];
+}
+
+std::shared_ptr<slava::DialogNode> slava::GameWorld::getCurrentDialog() { return currentDialog; }
 
 void slava::GameWorld::pause() { isPaused = true; }
 void slava::GameWorld::unpause() { isPaused = false; }

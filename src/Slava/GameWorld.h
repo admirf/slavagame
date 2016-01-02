@@ -8,7 +8,7 @@
 #include "HUD.h"
 #include "Map.h"
 #include "Trigger.h"
-#include "View.h"
+#include "UI.h"
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -24,7 +24,9 @@ namespace slava
 		std::unordered_map<const char*, CharacterPtr> characters;
 		std::unordered_map<const char*, Trigger*> triggers;
 		std::unordered_map<const char*, Animation*> animations;
-		std::unordered_map<const char*, View*> views;
+		std::unordered_map<const char*, UI*> views;
+		std::unordered_map<const char*, std::shared_ptr<DialogNode> > dialogs;
+		std::shared_ptr<DialogNode> currentDialog;
 		std::vector<const char*> toBeRemoved;
 		std::vector<const char*> triggersToBeRemoved;
 		
@@ -39,8 +41,8 @@ namespace slava
 
 	public:
 		GameWorld(sf::RenderWindow*, Map*);
-		void addView(View*);
-		View* getView(const char*);
+		void addUI(UI*);
+		UI* getUI(const char*);
 		void setMainCharacter(CharacterPtr);
 		void addCharacter(CharacterPtr);
 		void addCharacters(std::vector<CharacterPtr>&);
@@ -50,8 +52,12 @@ namespace slava
 		void removeTrigger(const char*);
 		CharacterPtr getMainCharacter();
 		std::unordered_map<const char*, Trigger*> getTriggers();
+		void addDialog(std::shared_ptr<DialogNode>, const char*);
+		std::shared_ptr<DialogNode> getDialog(const char*);
 		void addAnimation(Animation*);
 		Animation* getAnimation(const char*);
+		void setCurrentDialog(const char*);
+		std::shared_ptr<DialogNode> getCurrentDialog();
 		void setCamera(Camera*);
 		void setHUD(HUD*);
 		void setNotification(Notification*);

@@ -6,6 +6,7 @@
 #include "Stats.h"
 #include "Animation.h"
 #include "Map.h"
+#include "Dialog.h"
 #include <vector>
 #include <memory>
 
@@ -64,6 +65,8 @@ namespace slava
 		// Ogranicenje za ubrzanje da ne bi u beskonacnost ubrzavo
 		
 		IController* controller;
+		std::shared_ptr<DialogNode> dialog;
+
 
 		bool isWalkableVertical(int, int, int);
 		bool isWalkableHorizontal(int, int, int);
@@ -89,6 +92,8 @@ namespace slava
 		void addAnimation(Animation&);
 		void playAnimation(int);
 		void updateAnimation(int);
+		void setDialog(std::shared_ptr<DialogNode>&);
+		std::shared_ptr<DialogNode> getDialog();
 		int getNumberOfAnimations();
 
 		void moveRandom();

@@ -10,7 +10,10 @@
 #include "TileFactory.h"
 #include "Notification.h"
 #include "GameWorld.h"
-#include "SkillView.h"
+#include "SkillUI.h"
+#include "NPC.h"
+#include "Dialog.h"
+#include "DialogUI.h"
 #include <iostream>
 #define WIN_SIZE_X 1000
 #define WIN_SIZE_Y 600
@@ -43,6 +46,11 @@ void exec(GameWorld* world) {
 	enemy->addAnimation(*world->getAnimation("hit"));
 	enemy->setGameWorld(world);
 	world->addCharacter(enemy);
+}
+
+void dialog1IncreaseInStrengthAction(GameWorld* world) {
+	world->getMainCharacter()->increaseSkill(STRENGTH);
+	world->getNotification()->play("Strength increased");
 }
 
 
@@ -96,10 +104,84 @@ int main()
 	enemy->addAnimation(anim);
 	enemy->setGameWorld(world);
 
+
+
+
+	// Neki karakter koji ce imat konverzaciju, zvacemo ga Hamo
+	auto hamo = make_shared<Character>("hamo");
+	hamo->setMap(&map);
+	hamo->setTexture(loadTexture("Main-Character.png"));
+	hamo->setController(new NPC(character)); // NPC kontroller btw isto ko i EnemyController zahtjeva main karakter kao arg
+	hamo->setGameWorld(world);
+	hamo->getSprite()->setPosition(22 * BLOCK_SIZE, 10 * BLOCK_SIZE);
+	hamo->getSprite()->setColor(sf::Color::Blue);
+
+	// pravljenje dialoga, veliki tutorijal
+	// Za one sto znaju sta rade kada ovo citaju, dialozi su stablo koje se rucno pravi
+	auto dialog = Dialog::createDialog(); 
+	// ovako napravimo pitanje
+	dialog->question = "Are you a brave warrior?";
+	// sad idu odgovori, uvijek ima cetiri odgovora, ako se odgovor ne popuni pisace ...
+	// odgovori su indeksirani od 0 do 3 logicno al ja eto da slucajno neko glup cita
+	dialog->answers[0] = "Brave huh? I am king of kings.";
+	dialog->answers[1] = "Of course.";
+	dialog->answers[2] = "Nah";
+	dialog->answers[3] = "Do you want to test it.";
+	// pravimo jos jedan dialog, ovdje pitanje stavimo odgovor npc-a i samo ostavimo prazne odgovore
+	auto dialog2 = Dialog::createDialog();
+	dialog2->question = "Then you shall have my sword";
+	// Sada cemo povezati prva 3 odgovora iz pocetnog dialoga sa drugim dijalogom(koji ne vodi ni u sta)
+	Dialog::connect(dialog, 0, dialog2);
+	Dialog::connect(dialog, 1, dialog2);
+	Dialog::connect(dialog, 2, dialog2);
+	// pravimo jos neki dialog da istestiramo fino
+	auto dialog3 = Dialog::createDialog();
+	dialog3->question = "Do you wish to fight me. A legend of the\n    battlefield?";
+	// naravno mogu se i ovako odgovori stavit ne mora se indeksirat, samo je bitno da ima cetiri odgovora
+	dialog3->answers = { 
+		"Let's fight!", 
+		"It looks like I am not brave enough.", 
+		"Of course. (Run away)", 
+		"Sorry if I offended you." 
+	};
+	// neka do ovog dialoga dodje ako igrac odabere cetvti odgovor iz prvog
+	Dialog::connect(dialog, 3, dialog3);
+	// ovo je feature da kad se odredjeni odgovor odabere da se pokrene neka akcija
+	// akcije su zapravo funkcija tipa void func(GameWorld*) njih proslijedjuemo kao treci argument, 
+	// drugi argument je indeks odgovora u dialogu s kojim zelimo da povezemo akciju, akcije su tip
+	// ako izaberes pravi odgovor ubacis characteru u inventory nesto (zasad nemamo inventory)
+	Dialog::setAction(dialog3, 0, dialog1IncreaseInStrengthAction);
+	// vezemo karakter i dijalog
+	hamo->setDialog(dialog); // opcionalno bitno je da se doda u game world
+	// dialog se mora posebno dodati i u game world
+
+	// jos neki npc koji ce imat dialog, cisto da vidim radi li
+	auto juka = make_shared<Character>("juka");
+	juka->setMap(&map);
+	juka->setTexture(loadTexture("Main-Character.png"));
+	juka->setController(new NPC(character));
+	juka->setGameWorld(world);
+	juka->getSprite()->setPosition(35 * BLOCK_SIZE, 10 * BLOCK_SIZE);
+	juka->getSprite()->setColor(sf::Color::Black);
+	// E hajmo sad dialogcic
+	auto jukaDialog = Dialog::createDialog();
+	jukaDialog->question = "What are you called?";
+	jukaDialog->answers = {"The Wolf", "The Dragon", "The Bear", "The Eagle"};
+	auto jukaDialog2 = Dialog::createDialog();
+	jukaDialog2->question = "Hmmm. Interesting. Now fuck off!";
+	for (int i = 0; i < 4; ++i) Dialog::connect(jukaDialog, i, jukaDialog2);
+
+
+
 	// Skill UI
-	auto skillView = make_shared<SkillView>(*font);
+	auto skillView = make_shared<SkillUI>(*font);
 	skillView->active = false;
 	skillView->id = "skillUI";
+
+	// Dialog UI
+	auto dialogUI = make_shared<DialogUI>(*font);
+	dialogUI->active = false;
+	dialogUI->id = "dialogUI";
 	
 	// HUD, Notifikacije i Kamera
 	HUD hud(character->getStats(), font);
@@ -115,13 +197,18 @@ int main()
 	world->setMainCharacter(character);
 	world->addAnimation(&anim);
 	world->addCharacter(enemy);
+	world->addCharacter(hamo);
+	world->addCharacter(juka);
 	world->setCamera(&cam);
 	world->setHUD(&hud);
-	world->addView(skillView.get());
+	world->addUI(skillView.get());
+	world->addUI(dialogUI.get());
 	world->setNotification(&notification);
 	world->setView(&customView);
-	world->addTrigger(&trigger);
-	world->addTrigger(&gameOverTrigger);
+	world->addDialog(jukaDialog, "juka"); // ime dialoga mora bit jednako imenu npc-a za koji je vezan
+	world->addDialog(dialog, "hamo"); // ponavljam kljuc/ime dialoga mora bit jednako ID-u npc-a za koji zelite da izazove dialog
+	// world->addTrigger(&trigger);
+	// world->addTrigger(&gameOverTrigger);
 
 	string over = "Game over. Press space to play again.";
 
