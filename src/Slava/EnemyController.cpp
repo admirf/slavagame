@@ -98,9 +98,6 @@ void slava::EnemyController::control(Character* enemy) {
 		enemy->gotHit(false);
 
 		if (enemy->isDead()) {
-			std::cout << " ID " << enemy->getID() << '\n';
-			enemy->getGameWorld()->removeCharacter(enemy->getID());
-			
 			this->player->getGameWorld()->getNotification()->play("Skill points increased");
 			// enemy->alive();
 			// enemy->getSprite()->setPosition(0, 0);

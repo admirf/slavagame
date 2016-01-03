@@ -21,6 +21,7 @@ void slava::GameWorld::addCharacters(std::vector<CharacterPtr>& chars) {
 }
 
 void slava::GameWorld::removeCharacter(const char* id) {
+	std::cout << "Gets called" << std::endl;
 	toBeRemoved.push_back(id);
 }
 
@@ -150,7 +151,7 @@ void slava::GameWorld::update() {
 
 	// Updatujemo kontrolu i animacije za ostale karaktere
 	for (auto& chars : characters) {
-		if(!isPaused)
+		if(!isPaused && !chars.second->isDead())
 			chars.second->control();
 		for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
 			chars.second->updateAnimation(i);
@@ -180,7 +181,7 @@ void slava::GameWorld::update() {
 			mainCharacter->updateAnimation(i);
 
 		for (auto& chars : characters) {
-			if(!isPaused)
+			if(!isPaused && !chars.second->isDead())
 				chars.second->control();
 			for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
 				chars.second->updateAnimation(i);
@@ -198,8 +199,8 @@ void slava::GameWorld::update() {
 
 	// Crtamo ostale karaktere koji nisu mrtvi
 	for (auto& chars : characters) {
-		// if (!chars.second->isDead())
-		chars.second->draw(*window);
+		if (!chars.second->isDead())
+			chars.second->draw(*window);
 	}
 	// crtamo nas karakter
 	mainCharacter->draw(*window);

@@ -44,4 +44,4 @@ namespace slava
 
 }
 
-#endif MAP_H
+#endif

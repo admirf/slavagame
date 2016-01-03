@@ -34,18 +34,17 @@ void runGameOver(GameWorld* world) {
 }
 
 bool sampleFunction(GameWorld* world) {
-	if (world->getCharacters().empty()) return true;
+	if (world->getCharacters()["enemy1"]->isDead()) return true;
 	else return false;
 }
 
 void exec(GameWorld* world) {
 	diff += 0.05;
-	auto enemy = EnemyFactory::createBasicEnemy("enemy", world->getMainCharacter(), rand() % WIN_SIZE_X, rand() % WIN_SIZE_Y);
+	auto enemy = world->getCharacters()["enemy1"];
 	enemy->getStats()->health += diff;
 	enemy->getStats()->limit += diff;
-	enemy->addAnimation(*world->getAnimation("hit"));
-	enemy->setGameWorld(world);
-	world->addCharacter(enemy);
+	enemy->getSprite()->setPosition(rand() % WIN_SIZE_X, rand() % WIN_SIZE_Y);
+	enemy->alive();
 }
 
 void dialog1IncreaseInStrengthAction(GameWorld* world) {
@@ -207,8 +206,8 @@ int main()
 	world->setView(&customView);
 	world->addDialog(jukaDialog, "juka"); // ime dialoga mora bit jednako imenu npc-a za koji je vezan
 	world->addDialog(dialog, "hamo"); // ponavljam kljuc/ime dialoga mora bit jednako ID-u npc-a za koji zelite da izazove dialog
-	// world->addTrigger(&trigger);
-	// world->addTrigger(&gameOverTrigger);
+	world->addTrigger(&trigger);
+	world->addTrigger(&gameOverTrigger);
 
 	string over = "Game over. Press space to play again.";
 
