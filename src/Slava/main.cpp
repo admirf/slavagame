@@ -14,6 +14,7 @@
 #include "NPC.h"
 #include "Dialog.h"
 #include "DialogUI.h"
+#include "InventoryUI.h"
 #include <iostream>
 #define WIN_SIZE_X 1000
 #define WIN_SIZE_Y 600
@@ -59,6 +60,7 @@ int main()
 	// Resursi
 	auto txt = loadTexture("tileset1.png");
 	auto font = loadFont("sgs.ttf");
+	auto item_tileset = loadTexture("inventory_tile_set.png");
 
 	// Prozor
 	sf::RenderWindow window(sf::VideoMode(WIN_SIZE_X, WIN_SIZE_Y), "Slava");
@@ -71,6 +73,16 @@ int main()
 
 	// kreacija svijeta, mora bit poslije mape i prozora, a prije charactera da bi mogli stavit u character referencu na game world
 	GameWorld* world = new GameWorld(&window, &map);
+
+	// Itemi igrice
+	vector<ItemPtr> items_vector = {
+		createItem("empy", EMPTY, 0, 0, 0, 0, 0),
+		createItem("Sword of Recklesness", SWORD, 0, 0, 0.15, 0, 0),
+		createItem("Sword of Holy Light", SWORD, 0, 0, 0.20, 0, 0),
+		createItem("Sword of the Conqueror", SWORD, 0, 0, 0.25, 0, 0),
+		createItem("Shield of Righteousnous", SHIELD, 0, 0.25, 0, 0, 0)
+	};
+	Items items(item_tileset, 128, items_vector);
 
 	// Trigger
 	Trigger trigger("prvi");
@@ -92,28 +104,26 @@ int main()
 	character->getStats()->sp = 0;
 	character->setGameWorld(world);
 	character->getSprite()->setPosition(15 * BLOCK_SIZE, BLOCK_SIZE);
+	character->addItem(1);
+	character->addItem(3, 5);
 	// animacija udaranja
 	vector<shared_ptr<sf::Texture>> textures;
-	textures.push_back(loadTexture("main_cha_hit.png"));
+	textures.push_back(loadTexture("Main-Character-Hit.png"));
 	Animation anim("hit", textures, sf::milliseconds(180));
 	character->addAnimation(anim);
 
 	// Neprijatelj
 	auto enemy = EnemyFactory::createBasicEnemy("enemy1", character, 200, 400);
-	enemy->addAnimation(anim);
 	enemy->setGameWorld(world);
-
-
 
 
 	// Neki karakter koji ce imat konverzaciju, zvacemo ga Hamo
 	auto hamo = make_shared<Character>("hamo");
 	hamo->setMap(&map);
-	hamo->setTexture(loadTexture("Main-Character.png"));
+	hamo->setTexture(loadTexture("plemic.png"));
 	hamo->setController(new NPC(character)); // NPC kontroller btw isto ko i EnemyController zahtjeva main karakter kao arg
 	hamo->setGameWorld(world);
 	hamo->getSprite()->setPosition(22 * BLOCK_SIZE, 10 * BLOCK_SIZE);
-	hamo->getSprite()->setColor(sf::Color::Blue);
 
 	// pravljenje dialoga, veliki tutorijal
 	// Za one sto znaju sta rade kada ovo citaju, dialozi su stablo koje se rucno pravi
@@ -157,11 +167,10 @@ int main()
 	// jos neki npc koji ce imat dialog, cisto da vidim radi li
 	auto juka = make_shared<Character>("juka");
 	juka->setMap(&map);
-	juka->setTexture(loadTexture("Main-Character.png"));
+	juka->setTexture(loadTexture("sluga.png"));
 	juka->setController(new NPC(character));
 	juka->setGameWorld(world);
 	juka->getSprite()->setPosition(35 * BLOCK_SIZE, 10 * BLOCK_SIZE);
-	juka->getSprite()->setColor(sf::Color::Black);
 	// E hajmo sad dialogcic
 	auto jukaDialog = Dialog::createDialog();
 	jukaDialog->question = "What are you called?";
@@ -181,6 +190,11 @@ int main()
 	auto dialogUI = make_shared<DialogUI>(*font);
 	dialogUI->active = false;
 	dialogUI->id = "dialogUI";
+
+	// Dialog UI
+	auto inventoryUI = make_shared<InventoryUI>(*font, items);
+	inventoryUI->active = false;
+	inventoryUI->id = "inventoryUI";
 	
 	// HUD, Notifikacije i Kamera
 	HUD hud(character->getStats(), font);
@@ -202,12 +216,14 @@ int main()
 	world->setHUD(&hud);
 	world->addUI(skillView.get());
 	world->addUI(dialogUI.get());
+	world->addUI(inventoryUI.get());
 	world->setNotification(&notification);
 	world->setView(&customView);
 	world->addDialog(jukaDialog, "juka"); // ime dialoga mora bit jednako imenu npc-a za koji je vezan
 	world->addDialog(dialog, "hamo"); // ponavljam kljuc/ime dialoga mora bit jednako ID-u npc-a za koji zelite da izazove dialog
-	world->addTrigger(&trigger);
-	world->addTrigger(&gameOverTrigger);
+	world->setItems(&items);
+	//world->addTrigger(&trigger);
+	//world->addTrigger(&gameOverTrigger);
 
 	string over = "Game over. Press space to play again.";
 

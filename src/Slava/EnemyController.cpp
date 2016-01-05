@@ -80,7 +80,7 @@ void slava::EnemyController::control(Character* enemy) {
 		hit = true;
 		enemy->playAnimation(0);
 		if (!this->player->isBlock) {
-			this->player->getStats()->health -= 0.1;
+			this->player->getStats()->health -= (0.1 - this->player->currentShield->armorEffect);
 			this->player->gotHit(true);
 		}
 		enemy->moveRandom();
@@ -94,11 +94,13 @@ void slava::EnemyController::control(Character* enemy) {
 	// provjeri da li je enemy ubijen i ako jeste dodaj igracu sp-a
 	if (dist <= 20 && this->player->isAttack) {
 
-		enemy->getStats()->health -= this->player->getStats()->strength * 0.01;
+		enemy->getStats()->health -= (this->player->getStats()->strength + this->player->currentWeapon->strengthEffect) * 0.01;
 		enemy->gotHit(false);
 
 		if (enemy->isDead()) {
-			this->player->getGameWorld()->getNotification()->play("Skill points increased");
+			this->player->getGameWorld()->getNotification()->play("Skill points increased.\nLoot added to inventory.");
+			int loot = rand() % 200 + 1;
+			this->player->getStats()->gold += loot;
 			// enemy->alive();
 			// enemy->getSprite()->setPosition(0, 0);
 			this->player->getStats()->sp += 200;

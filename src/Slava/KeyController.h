@@ -107,6 +107,12 @@ namespace slava
 			else {
 				character->isBlock = false;
 			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+				character->getGameWorld()->getWindow()->setKeyRepeatEnabled(false);
+				character->getGameWorld()->getUI("inventoryUI")->active = true;
+				character->getGameWorld()->pause();
+			}
 			
 		}
 	};

@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Trigger.h"
 #include "UI.h"
+#include "Inventory.h"
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -29,6 +30,8 @@ namespace slava
 		std::shared_ptr<DialogNode> currentDialog;
 		std::vector<const char*> toBeRemoved;
 		std::vector<const char*> triggersToBeRemoved;
+
+		Items* items;
 		
 		Camera* camera;
 		HUD* hud;
@@ -61,7 +64,9 @@ namespace slava
 		void setCamera(Camera*);
 		void setHUD(HUD*);
 		void setNotification(Notification*);
+		void setItems(Items*);
 		void setView(sf::View*);
+		Items* getItems();
 		bool isAllSet();
 		void update();
 		bool isFinished();

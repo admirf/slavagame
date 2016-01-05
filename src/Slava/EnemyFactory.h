@@ -4,6 +4,9 @@
 #include "Character.h"
 #include "EnemyController.h"
 #include "Utility.h"
+#include "Animation.h"
+#include <memory>
+#include <vector>
 
 namespace slava 
 {
@@ -17,8 +20,14 @@ namespace slava
 			auto enemy = std::make_shared<Character>(id);
 			enemy->setController(controller);
 			enemy->limit = 1.2;
-			enemy->setTexture(loadTexture("Main-Character.png"));
+			enemy->setTexture(loadTexture("Basic-Enemy.png"));
 			enemy->getSprite()->setPosition(x, y);
+
+			std::vector<std::shared_ptr<sf::Texture>> textures;
+			textures.push_back(loadTexture("Basic-Enemy-Hit.png"));
+			Animation anim("hit", textures, sf::milliseconds(180));
+			enemy->addAnimation(anim);
+
 			return enemy;
 		}
 	};

@@ -15,13 +15,13 @@ slava::Character::~Character() {
 	delete stats;
 	// Napomena: Ubuduce odma koristit smart pointere 
 	/*for (auto& anim : animations) {
-		for (int i = 0; i < anim.getTextures().size(); ++i) {
-			if (anim.getTextures()[i] != NULL) {
-				delete anim.getTextures()[i];
-				anim.getTextures()[i] = NULL;
-			}
-		}
-		// anim.getTextures().clear();
+	for (int i = 0; i < anim.getTextures().size(); ++i) {
+	if (anim.getTextures()[i] != NULL) {
+	delete anim.getTextures()[i];
+	anim.getTextures()[i] = NULL;
+	}
+	}
+	// anim.getTextures().clear();
 	}*/
 }
 
@@ -53,13 +53,17 @@ void slava::Character::init() {
 	stats->mana = 1;
 	stats->limit = 2;
 	stats->sp = 0;
+	stats->gold = 0;
+	inventory.resize(10);
+	currentShield = createItem("", SHIELD, 0, 0, 0, 0, 0);
+	currentWeapon = createItem("", SWORD, 0, 0, 0, 0, 0);
 }
 
 slava::Character::Character(const char* id) {
 	this->id = id;
 	sprite = new sf::Sprite();
 	init();
-	
+
 }
 
 slava::Character::Character(const char* id, sf::Texture* text) {
@@ -113,9 +117,9 @@ void slava::Character::draw(sf::RenderWindow& win) {
 	}
 	/*
 	else {
-		sprite->setColor(originalColor);
-		hit = false;
-		// clock.restart();
+	sprite->setColor(originalColor);
+	hit = false;
+	// clock.restart();
 	}*/
 
 	sprite->move(static_cast<float>(vX), static_cast<float>(vY));
@@ -203,25 +207,25 @@ bool slava::Character::canIncreaseSkill() {
 /* Nadajmo se da nikad nece trebat
 
 void slava::Character::addCollidableCharacter(std::shared_ptr<Character> other) {
-	otherCharacters.push_back(other);
+otherCharacters.push_back(other);
 }
 
 bool slava::Character::collision(std::shared_ptr<Character> other) {
-	if (this->sprite->getGlobalBounds().intersects(other->getSprite()->getGlobalBounds())) {
-		return true;
-	}
-	return false;
+if (this->sprite->getGlobalBounds().intersects(other->getSprite()->getGlobalBounds())) {
+return true;
+}
+return false;
 }
 
 bool slava::Character::notColliding() {
-	for (auto others : otherCharacters) {
-		if (this->collision(others)) return false;
-	}
-	return true;
+for (auto others : otherCharacters) {
+if (this->collision(others)) return false;
+}
+return true;
 }
 
 void slava::Character::clearCollidableCharacters() {
-	this->otherCharacters.clear();
+this->otherCharacters.clear();
 }
 */
 
@@ -299,7 +303,7 @@ bool slava::Character::isWalkableVertical(int x, int y, int z) {
 	for (int i = y; i <= z; ++i) {
 		if (!worldMap->tileAt(i, x)->isWalkable) return false;
 	}
-	
+
 	return true;
 }
 
@@ -349,7 +353,26 @@ bool slava::Character::canMoveRight() {
 	return isWalkableHorizontal(x, y1, y2);
 }
 
+void slava::Character::addItem(int item, int index) {
+	inventory[index] = item;
+}
 
+void slava::Character::addItem(int item) {
+	for (int i = 0; i < inventory.size(); ++i) {
+		if (!inventory[i]) {
+			inventory[i] = item;
+			return;
+		}
+	}
+}
+
+void slava::Character::removeItem(int index) {
+	inventory[index] = 0;
+}
+
+int slava::Character::getItem(int index) {
+	return inventory[index];
+}
 
 int slava::Character::getNumberOfAnimations() {
 	return animations.size();

@@ -121,6 +121,14 @@ std::shared_ptr<slava::DialogNode> slava::GameWorld::getCurrentDialog() { return
 void slava::GameWorld::pause() { isPaused = true; }
 void slava::GameWorld::unpause() { isPaused = false; }
 
+void slava::GameWorld::setItems(Items* items) {
+	this->items = items;
+}
+
+slava::Items* slava::GameWorld::getItems() {
+	return items;
+}
+
 void slava::GameWorld::update() {
 	if (!isAllSet()) return;
 

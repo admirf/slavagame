@@ -7,6 +7,7 @@
 #include "Animation.h"
 #include "Map.h"
 #include "Dialog.h"
+#include "Inventory.h"
 #include <vector>
 #include <memory>
 
@@ -46,6 +47,7 @@ namespace slava
 		const char* id;
 		GameWorld* world;
 		std::vector<Animation> animations;
+		std::vector<int> inventory;
 		Map* worldMap;
 		bool mapIsSet = false;
 		TexturePtr texture;
@@ -63,7 +65,7 @@ namespace slava
 		bool hasLeveledUp = false;
 
 		// Ogranicenje za ubrzanje da ne bi u beskonacnost ubrzavo
-		
+
 		IController* controller;
 		std::shared_ptr<DialogNode> dialog;
 
@@ -75,6 +77,8 @@ namespace slava
 		bool isAttack;
 		bool isBlock;
 		double limit = 2;
+		ItemPtr currentWeapon;
+		ItemPtr currentShield;
 		Character(const char*);
 		Character(const char*, sf::Texture*);
 		void init();
@@ -114,13 +118,18 @@ namespace slava
 		void gotHit(bool);
 		bool canBeHere(int, int);
 		Position getPositionOnTile(int);
-		
+
 		/*
 		bool collision(std::shared_ptr<Character>);
 		void addCollidableCharacter(std::shared_ptr<Character>);
 		void clearCollidableCharacters();
 		bool notColliding();
 		*/
+
+		void addItem(int, int);
+		void addItem(int);
+		int getItem(int);
+		void removeItem(int);
 
 		void levelUp();
 		void increaseSkill(skills);

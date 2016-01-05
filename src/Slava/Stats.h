@@ -15,6 +15,7 @@ namespace slava
 		double acceleration;
 		// level sistem revamped
 		int level;
+		int gold;
 		double strength;
 		double endurance;
 		double mana;
