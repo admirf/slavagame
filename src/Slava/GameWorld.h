@@ -62,6 +62,7 @@ namespace slava
 		void setCurrentDialog(const char*);
 		std::shared_ptr<DialogNode> getCurrentDialog();
 		void setCamera(Camera*);
+		Camera* getCamera();
 		void setHUD(HUD*);
 		void setNotification(Notification*);
 		void setItems(Items*);
@@ -71,6 +72,7 @@ namespace slava
 		void update();
 		bool isFinished();
 		void finish();
+		void quit();
 		void restart();
 		void pause();
 		void unpause();

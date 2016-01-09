@@ -10,19 +10,8 @@
 
 slava::Character::~Character() {
 	delete sprite;
-	// delete texture;
 	delete controller;
 	delete stats;
-	// Napomena: Ubuduce odma koristit smart pointere 
-	/*for (auto& anim : animations) {
-	for (int i = 0; i < anim.getTextures().size(); ++i) {
-	if (anim.getTextures()[i] != NULL) {
-	delete anim.getTextures()[i];
-	anim.getTextures()[i] = NULL;
-	}
-	}
-	// anim.getTextures().clear();
-	}*/
 }
 
 void slava::Character::setGameWorld(GameWorld* game) {
@@ -51,6 +40,7 @@ void slava::Character::init() {
 	stats->endurance = 1;
 	stats->strength = 1;
 	stats->mana = 1;
+	stats->mana_timer = 1;
 	stats->limit = 2;
 	stats->sp = 0;
 	stats->gold = 0;
@@ -100,6 +90,7 @@ void slava::Character::control() {
 void slava::Character::setTexture(TexturePtr text) {
 	texture = text;
 	sprite->setTexture(*texture);
+	blockTexture = text;
 	// originalColor = sprite->getColor();
 }
 
@@ -203,31 +194,6 @@ void slava::Character::increaseSkill(skills skill) {
 bool slava::Character::canIncreaseSkill() {
 	return hasLeveledUp;
 }
-
-/* Nadajmo se da nikad nece trebat
-
-void slava::Character::addCollidableCharacter(std::shared_ptr<Character> other) {
-otherCharacters.push_back(other);
-}
-
-bool slava::Character::collision(std::shared_ptr<Character> other) {
-if (this->sprite->getGlobalBounds().intersects(other->getSprite()->getGlobalBounds())) {
-return true;
-}
-return false;
-}
-
-bool slava::Character::notColliding() {
-for (auto others : otherCharacters) {
-if (this->collision(others)) return false;
-}
-return true;
-}
-
-void slava::Character::clearCollidableCharacters() {
-this->otherCharacters.clear();
-}
-*/
 
 void slava::Character::setDialog(std::shared_ptr<DialogNode>& node) {
 	this->dialog = node;
@@ -376,4 +342,29 @@ int slava::Character::getItem(int index) {
 
 int slava::Character::getNumberOfAnimations() {
 	return animations.size();
+}
+
+void slava::Character::setBlockTexture(TexturePtr texture) {
+	blockTexture = texture;
+}
+
+void slava::Character::block() {
+	if (!isBlock) {
+		sprite->setTexture(*blockTexture);
+		isBlock = true;
+	}
+}
+
+void slava::Character::unblock() {
+	if (isBlock) {
+		sprite->setTexture(*texture);
+		isBlock = false;
+	}
+}
+
+void slava::Character::stopMovement() {
+	stopDown();
+	stopUp();
+	stopLeft();
+	stopRight();
 }

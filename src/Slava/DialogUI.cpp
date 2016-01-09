@@ -63,6 +63,12 @@ void slava::DialogUI::draw(sf::RenderWindow& win) {
 	int xC = win.getView().getCenter().x;
 	int yC = win.getView().getCenter().y;
 
+	if (cpy->question.length() > 40) {
+		question.setCharacterSize(15);
+	}
+	else {
+		question.setCharacterSize(24);
+	}
 	question.setString("  " + cpy->question);
 	for (int i = 0; i < 4; ++i) {
 		if (cpy->answers[i] != "") {

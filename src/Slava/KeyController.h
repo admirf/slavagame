@@ -37,61 +37,78 @@ namespace slava
 			int x = character->getSprite()->getPosition().x;
 			int y = character->getSprite()->getPosition().y;
 
-			// std::cout << x << ':' << y << " in RawMap\n";
+			std::cout << x << ':' << y << " in RawMap\n";
 
 			// Regeneracija healtha u ovisnosti levela igraca
 			if (character->getStats()->health < 1) {
 				character->getStats()->health += 0.0001 * character->getStats()->level;
 			}
+			// Regeneracija mane u ovisnosti od mane igraca
+			if (character->getStats()->mana_timer < 1) {
+				character->getStats()->mana_timer += 0.0001 * character->getStats()->mana;
+			}
 			
 			// Obicna kontrola kretnje, ako tipka nije stisnuta treba zaustavljat karakter u tom smjeru
 			// Ove provjere valid movement point ovo ja sad cisto onako da vidim bil funkcionisalo i evo bi
 			// naravno ova sad implementacija za koliziju je dosta neprecizna i treba za svaki smjer napravit posebno provjeru mozel se ic dalje
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && character->canMoveDown()) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && character->canMoveDown()) {
 				character->moveDown();
 			}
 			else {
 				character->stopDown();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && character->canMoveRight()) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && character->canMoveRight()) {
 				character->moveRight();
 			}
 			else {
 				character->stopRight();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && character->canMoveUp()) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && character->canMoveUp()) {
 				character->moveUp();
 			}
 			else {
 				character->stopUp();
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && character->canMoveLeft()) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && character->canMoveLeft()) {
 				character->moveLeft();
 			}
 			else {
 				character->stopLeft();
 			}
 
+			// Pauza na escape
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				character->getGameWorld()->getUI("pauseUI")->active = true;
+				character->getGameWorld()->pause();
+			}
+
+			// informacije o current weapon i shield
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+				std::string s = "Current weapon: " + character->currentWeapon->name + "\nCurrent shield: " + character->currentShield->name;
+				character->getGameWorld()->getNotification()->play(s.c_str());
+			}
 
 			// ATTACK_LENGTH je duzina u milisekundama koliko traje napad
 			// Ako je proslo to vrijeme stavljamo da karakter nije u Attack modu
 			if (clock.getElapsedTime().asMilliseconds() > ATTACK_LENGTH) {
 				character->isAttack = false;
+				character->isManaAttack = false;
 				// sf::Time t1 = clock.restart();
 				// character->hit();
 			}
 
-			// Ako je igrac stisnuo space i vrijeme od proslog napada je isteklo
+			// Ako je igrac uradio lijevi klik i vrijeme od proslog napada je isteklo
 			// Igramo animaciju udarca koja je indexirana na nuli
 			// Stavljamo da je character u Attack modu
 			// restartujemo sat koji mjeri vrijeme od zadnjeg napada
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 				if (clock.getElapsedTime().asMilliseconds() > ATTACK_LENGTH) {
 					character->playAnimation(0);
 					character->isAttack = true;
+					character->isBlock = false;
 					sf::Time t1 = clock.restart();
 					// character->getGameWorld()->getNotification()->play("You hit the bastard!");
 					// character->hit();
@@ -99,19 +116,36 @@ namespace slava
 				
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-				character->isAttack = false;
-				character->isBlock = true;
-				character->getGameWorld()->getNotification()->play("Block mode");
-			}
-			else {
-				character->isBlock = false;
+			// Ako je igras udario srednji mis radimo isto ko i za obicni napad samo mana napad
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) && character->getStats()->mana_timer >= 1) {
+				if (clock.getElapsedTime().asMilliseconds() > ATTACK_LENGTH) {
+					character->playAnimation(1);
+					character->isManaAttack = true;
+					character->isBlock = false;
+					character->getStats()->mana_timer = 0;
+					sf::Time t1 = clock.restart();
+					// character->getGameWorld()->getNotification()->play("You hit the bastard!");
+					// character->hit();
+				}
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+				character->block();
+				character->isAttack = false;
+				// character->isBlock = true;
+				return;
+				// character->getGameWorld()->getNotification()->play("Block mode");
+			}
+			else {
+				character->unblock();
+				// character->isBlock = false;
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {
 				character->getGameWorld()->getWindow()->setKeyRepeatEnabled(false);
 				character->getGameWorld()->getUI("inventoryUI")->active = true;
 				character->getGameWorld()->pause();
+				return;
 			}
 			
 		}

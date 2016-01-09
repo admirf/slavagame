@@ -51,6 +51,7 @@ namespace slava
 		Map* worldMap;
 		bool mapIsSet = false;
 		TexturePtr texture;
+		TexturePtr blockTexture;
 		sf::Sprite* sprite;
 		// sf::Color originalColor;
 		// std::vector< std::shared_ptr<Character> > otherCharacters;
@@ -76,6 +77,7 @@ namespace slava
 	public:
 		bool isAttack;
 		bool isBlock;
+		bool isManaAttack;
 		double limit = 2;
 		ItemPtr currentWeapon;
 		ItemPtr currentShield;
@@ -109,6 +111,7 @@ namespace slava
 		void stopDown();
 		void stopLeft();
 		void stopRight();
+		void stopMovement();
 		bool canMoveUp();
 		bool canMoveDown();
 		bool canMoveRight();
@@ -118,6 +121,9 @@ namespace slava
 		void gotHit(bool);
 		bool canBeHere(int, int);
 		Position getPositionOnTile(int);
+		void block();
+		void unblock();
+		void setBlockTexture(TexturePtr);
 
 		/*
 		bool collision(std::shared_ptr<Character>);

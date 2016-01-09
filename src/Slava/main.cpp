@@ -15,6 +15,7 @@
 #include "Dialog.h"
 #include "DialogUI.h"
 #include "InventoryUI.h"
+#include "PauseUI.h"
 #include <iostream>
 #define WIN_SIZE_X 1000
 #define WIN_SIZE_Y 600
@@ -34,23 +35,33 @@ void runGameOver(GameWorld* world) {
 	world->finish();
 }
 
-bool sampleFunction(GameWorld* world) {
+int counter = 3;
+bool triNapadaTrigger(GameWorld* world) {
 	if (world->getCharacters()["enemy1"]->isDead()) return true;
 	else return false;
 }
 
-void exec(GameWorld* world) {
-	diff += 0.05;
-	auto enemy = world->getCharacters()["enemy1"];
-	enemy->getStats()->health += diff;
-	enemy->getStats()->limit += diff;
-	enemy->getSprite()->setPosition(rand() % WIN_SIZE_X, rand() % WIN_SIZE_Y);
-	enemy->alive();
+void triNapada(GameWorld* world) {
+	if (counter < 3) {
+		world->getCharacters()["enemy1"]->alive();
+		world->getCharacters()["enemy1"]->getSprite()->setPosition(14 * BLOCK_SIZE, 15 * BLOCK_SIZE);
+		++counter;
+	}
 }
 
-void dialog1IncreaseInStrengthAction(GameWorld* world) {
-	world->getMainCharacter()->increaseSkill(STRENGTH);
-	world->getNotification()->play("Strength increased");
+void hackAround(GameWorld* world) {
+	counter = 0;
+}
+
+void odjednom(GameWorld* world) {
+	world->getCharacters()["enemy1"]->alive();
+	world->getCharacters()["enemy2"]->alive();
+	world->getCharacters()["enemy3"]->alive();
+}
+
+void samoJedan(GameWorld* world) {
+	world->getCharacters()["enemy1"]->alive();
+	world->getCharacters()["enemy1"]->getSprite()->setPosition(14 * BLOCK_SIZE, 15 * BLOCK_SIZE);
 }
 
 
@@ -59,12 +70,12 @@ int main()
 	srand(static_cast<unsigned>(time(0)));
 	// Resursi
 	auto txt = loadTexture("tileset1.png");
-	auto font = loadFont("sgs.ttf");
+	auto font = loadFont("Marlboro.ttf");
 	auto item_tileset = loadTexture("inventory_tile_set.png");
 
 	// Prozor
 	sf::RenderWindow window(sf::VideoMode(WIN_SIZE_X, WIN_SIZE_Y), "Slava");
-	window.setVerticalSyncEnabled(true);
+	window.setFramerateLimit(60);
 	// window.setKeyRepeatEnabled(true);
 
 	// Mapa
@@ -84,101 +95,134 @@ int main()
 	};
 	Items items(item_tileset, 128, items_vector);
 
-	// Trigger
-	Trigger trigger("prvi");
-	trigger.setRun(exec);
-	trigger.setTrigger(sampleFunction);
-	trigger.fireOnce = false;
-
 	// Kraj igre trigger
 	Trigger gameOverTrigger("drugi");
 	gameOverTrigger.setRun(runGameOver);
 	gameOverTrigger.setTrigger(gameOver);
 
+	// Za ona tri napada jebena
+	Trigger trigger("tri-napada");
+	trigger.fireOnce = false;
+	trigger.setTrigger(triNapadaTrigger);
+	trigger.setRun(triNapada);
+
 	// Main character
 	auto character = make_shared<Character>("feha");
 	character->setMap(&map);
 	character->setTexture(loadTexture("Main-Character.png"));
+	character->setBlockTexture(loadTexture("Main-Character-Block.png"));
 	character->setController(new KeyController());
 	character->getStats()->health = 1;
 	character->getStats()->sp = 0;
 	character->setGameWorld(world);
-	character->getSprite()->setPosition(15 * BLOCK_SIZE, BLOCK_SIZE);
+	character->getSprite()->setPosition(0, 1000);
 	character->addItem(1);
-	character->addItem(3, 5);
+	character->addItem(4);
+	character->currentShield = items.getItem(4);
+	character->currentWeapon = items.getItem(1);
+	/*character->addItem(1);
+	character->addItem(3, 5);*/
 	// animacija udaranja
 	vector<shared_ptr<sf::Texture>> textures;
 	textures.push_back(loadTexture("Main-Character-Hit.png"));
 	Animation anim("hit", textures, sf::milliseconds(180));
 	character->addAnimation(anim);
+	vector<TexturePtr> textures1;
+	textures1.push_back(loadTexture("Main-Character-Mana.png"));
+	Animation animMana("mana", textures1, sf::milliseconds(180));
+	character->addAnimation(animMana);
 
-	// Neprijatelj
-	auto enemy = EnemyFactory::createBasicEnemy("enemy1", character, 200, 400);
-	enemy->setGameWorld(world);
+	// Tri neprijatelja koja cemo stalno vrtit
+	auto enemy1 = EnemyFactory::createBasicEnemy("enemy1", character, 200, 400);
+	enemy1->setGameWorld(world);
+	enemy1->setMap(&map);
+	enemy1->getStats()->health = -1;
+
+	auto enemy2 = EnemyFactory::createBasicEnemy("enemy2", character, 150, 400);
+	enemy2->setGameWorld(world);
+	enemy2->setMap(&map);
+	enemy2->getStats()->health = -1;
+
+	auto enemy3 = EnemyFactory::createBasicEnemy("enemy3", character, 250, 400);
+	enemy3->setGameWorld(world);
+	enemy3->setMap(&map);
+	enemy3->getStats()->health = -1;
+
+	// Tvrtko jebac
+	auto tvrtko = make_shared<Character>("tvrtko");
+	tvrtko->setMap(&map);
+	tvrtko->setTexture(loadTexture("tvrtko.png"));
+	tvrtko->setController(new NPC(character)); // NPC kontroller btw isto ko i EnemyController zahtjeva main karakter kao arg
+	tvrtko->setGameWorld(world);
+	tvrtko->getSprite()->setPosition(50 * BLOCK_SIZE, 65 * BLOCK_SIZE);
 
 
-	// Neki karakter koji ce imat konverzaciju, zvacemo ga Hamo
-	auto hamo = make_shared<Character>("hamo");
-	hamo->setMap(&map);
-	hamo->setTexture(loadTexture("plemic.png"));
-	hamo->setController(new NPC(character)); // NPC kontroller btw isto ko i EnemyController zahtjeva main karakter kao arg
-	hamo->setGameWorld(world);
-	hamo->getSprite()->setPosition(22 * BLOCK_SIZE, 10 * BLOCK_SIZE);
-
-	// pravljenje dialoga, veliki tutorijal
-	// Za one sto znaju sta rade kada ovo citaju, dialozi su stablo koje se rucno pravi
-	auto dialog = Dialog::createDialog(); 
-	// ovako napravimo pitanje
-	dialog->question = "Are you a brave warrior?";
-	// sad idu odgovori, uvijek ima cetiri odgovora, ako se odgovor ne popuni pisace ...
-	// odgovori su indeksirani od 0 do 3 logicno al ja eto da slucajno neko glup cita
-	dialog->answers[0] = "Brave huh? I am king of kings.";
-	dialog->answers[1] = "Of course.";
-	dialog->answers[2] = "Nah";
-	dialog->answers[3] = "Do you want to test it.";
-	// pravimo jos jedan dialog, ovdje pitanje stavimo odgovor npc-a i samo ostavimo prazne odgovore
-	auto dialog2 = Dialog::createDialog();
-	dialog2->question = "Then you shall have my sword";
-	// Sada cemo povezati prva 3 odgovora iz pocetnog dialoga sa drugim dijalogom(koji ne vodi ni u sta)
-	Dialog::connect(dialog, 0, dialog2);
-	Dialog::connect(dialog, 1, dialog2);
-	Dialog::connect(dialog, 2, dialog2);
-	// pravimo jos neki dialog da istestiramo fino
-	auto dialog3 = Dialog::createDialog();
-	dialog3->question = "Do you wish to fight me. A legend of the\n    battlefield?";
-	// naravno mogu se i ovako odgovori stavit ne mora se indeksirat, samo je bitno da ima cetiri odgovora
-	dialog3->answers = { 
-		"Let's fight!", 
-		"It looks like I am not brave enough.", 
-		"Of course. (Run away)", 
-		"Sorry if I offended you." 
+	auto dialogT1 = Dialog::createDialog();
+	dialogT1->question = "Are you willing to battle for me?";
+	dialogT1->answers = {
+		"Yes my king, i pledge my loyalty!",
+		"No!",
+		"You are not my king!",
+		"I owe my loyalty to no one!",
 	};
-	// neka do ovog dialoga dodje ako igrac odabere cetvti odgovor iz prvog
-	Dialog::connect(dialog, 3, dialog3);
-	// ovo je feature da kad se odredjeni odgovor odabere da se pokrene neka akcija
-	// akcije su zapravo funkcija tipa void func(GameWorld*) njih proslijedjuemo kao treci argument, 
-	// drugi argument je indeks odgovora u dialogu s kojim zelimo da povezemo akciju, akcije su tip
-	// ako izaberes pravi odgovor ubacis characteru u inventory nesto (zasad nemamo inventory)
-	Dialog::setAction(dialog3, 0, dialog1IncreaseInStrengthAction);
-	// vezemo karakter i dijalog
-	hamo->setDialog(dialog); // opcionalno bitno je da se doda u game world
-	// dialog se mora posebno dodati i u game world
+	auto dialogT2 = Dialog::createDialog();
+	dialogT2->question = "Excellent! I have a request to make, are\n you willing to listen";
+	dialogT2->answers = {
+		"Whatever you wish my Lord",
+		"I can't do it now",
+		"",
+		""
+	};
+	Dialog::connect(dialogT1, 0, dialogT2);
+	auto dialogT3 = Dialog::createDialog();
+	dialogT3->question = "Go to the north-west fortress, and tell\n to the noble Ljubomir, that i want him to bolster our forces";
+	dialogT3->answers = {
+		"Yes my king!", "", "", ""
+	};
+	Dialog::connect(dialogT2, 0, dialogT3);
 
-	// jos neki npc koji ce imat dialog, cisto da vidim radi li
-	auto juka = make_shared<Character>("juka");
-	juka->setMap(&map);
-	juka->setTexture(loadTexture("sluga.png"));
-	juka->setController(new NPC(character));
-	juka->setGameWorld(world);
-	juka->getSprite()->setPosition(35 * BLOCK_SIZE, 10 * BLOCK_SIZE);
-	// E hajmo sad dialogcic
-	auto jukaDialog = Dialog::createDialog();
-	jukaDialog->question = "What are you called?";
-	jukaDialog->answers = {"The Wolf", "The Dragon", "The Bear", "The Eagle"};
-	auto jukaDialog2 = Dialog::createDialog();
-	jukaDialog2->question = "Hmmm. Interesting. Now fuck off!";
-	for (int i = 0; i < 4; ++i) Dialog::connect(jukaDialog, i, jukaDialog2);
 
+	// Plemic
+	auto ljubomir = make_shared<Character>("ljubomir");
+	ljubomir->setMap(&map);
+	ljubomir->setTexture(loadTexture("plemic.png"));
+	ljubomir->setController(new NPC(character));
+	ljubomir->setGameWorld(world);
+	ljubomir->getSprite()->setPosition(15 * BLOCK_SIZE, 15 * BLOCK_SIZE);
+
+	auto dialogL1 = Dialog::createDialog();
+	dialogL1->question = "What do you want with me?";
+	dialogL1->answers = {
+		"New king, king Tvrtko, seeks your alleigance!",
+		"You must obey new king!",
+		"I want to fight your champion!",
+		"Join our alliance."
+	};
+	auto dialogL2 = Dialog::createDialog();
+	dialogL2->question = "I accept, but only if you can defeat my champions!";
+	dialogL2->answers = {
+		"Bring it on!!!", "", "", ""
+	};
+	/*ovdje bi bilo super ako bi mogao napraviiti da krene fight, gdje ce biti 3 enemy-a i pojavljivat ce se jedan za drugim. Kad pobijedis jednog pojavi se durgi.*/
+	Dialog::connect(dialogL1, 0, dialogL2);
+	Dialog::connect(dialogL1, 3, dialogL2);
+	Dialog::setAction(dialogL2, 0, hackAround);
+	auto dialogL3 = Dialog::createDialog();
+	dialogL3->question = "Know your place. Champions kill him!";
+	dialogL3->answers = {
+		"Hah, bring it on!", "", "", ""
+	};
+	/*ovdje bi bilo super ako bi mogao napraviiti da krene fight, gdje ce biti 3 enemy-a odjednom i gdje sva tri moraju ubiti*/
+	Dialog::connect(dialogL1, 1, dialogL3);
+	Dialog::setAction(dialogL3, 0, odjednom);
+	auto dialogL4 = Dialog::createDialog();
+	dialogL4->question = "Champion, attack!";
+	dialogL4->answers = {
+		"Bring it on!", "", "", ""
+	};
+	/*ovdje bi bilo super ako bi mogao napraviiti da krene fight, gdje ce se pojaviti samo jedan enemy kojeg treba ubiti. ovo mozemo reci da je ko neki training ground ili nesto za grindanje expirienca*/
+	Dialog::connect(dialogL1, 2, dialogL4);
+	Dialog::setAction(dialogL4, 0, samoJedan);
 
 
 	// Skill UI
@@ -191,10 +235,15 @@ int main()
 	dialogUI->active = false;
 	dialogUI->id = "dialogUI";
 
-	// Dialog UI
+	// Inventory UI
 	auto inventoryUI = make_shared<InventoryUI>(*font, items);
 	inventoryUI->active = false;
 	inventoryUI->id = "inventoryUI";
+
+	// Pause UI
+	auto pauseUI = make_shared<PauseUI>(*font);
+	pauseUI->active = false;
+	pauseUI->id = "pauseUI";
 	
 	// HUD, Notifikacije i Kamera
 	HUD hud(character->getStats(), font);
@@ -209,21 +258,25 @@ int main()
 	// Spajamo sve u jedan svijet
 	world->setMainCharacter(character);
 	world->addAnimation(&anim);
-	world->addCharacter(enemy);
-	world->addCharacter(hamo);
-	world->addCharacter(juka);
+	world->addAnimation(&animMana);
+	world->addCharacter(enemy1);
+	world->addCharacter(enemy2);
+	world->addCharacter(enemy3);
+	world->addCharacter(tvrtko);
+	world->addCharacter(ljubomir);
 	world->setCamera(&cam);
 	world->setHUD(&hud);
 	world->addUI(skillView.get());
 	world->addUI(dialogUI.get());
 	world->addUI(inventoryUI.get());
+	world->addUI(pauseUI.get());
 	world->setNotification(&notification);
 	world->setView(&customView);
-	world->addDialog(jukaDialog, "juka"); // ime dialoga mora bit jednako imenu npc-a za koji je vezan
-	world->addDialog(dialog, "hamo"); // ponavljam kljuc/ime dialoga mora bit jednako ID-u npc-a za koji zelite da izazove dialog
+	world->addDialog(dialogT1, "tvrtko"); // ime dialoga mora bit jednako imenu npc-a za koji je vezan
+	world->addDialog(dialogL1, "ljubomir"); // ponavljam kljuc/ime dialoga mora bit jednako ID-u npc-a za koji zelite da izazove dialog
 	world->setItems(&items);
-	//world->addTrigger(&trigger);
-	//world->addTrigger(&gameOverTrigger);
+	world->addTrigger(&trigger);
+	world->addTrigger(&gameOverTrigger);
 
 	string over = "Game over. Press space to play again.";
 
@@ -238,8 +291,10 @@ int main()
 			sf::Event event;
 			while (window.pollEvent(event)) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-					character->getSprite()->setPosition(15 * BLOCK_SIZE, BLOCK_SIZE);
-					diff = 0;
+					character->getSprite()->setPosition(0, 1000);
+					enemy1->getStats()->health = -1;
+					enemy2->getStats()->health = -1;
+					enemy3->getStats()->health = -1;
 					world->restart();
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {

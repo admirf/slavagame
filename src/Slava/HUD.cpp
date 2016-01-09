@@ -11,6 +11,11 @@ slava::HUD::HUD(Stats* stats, FontPtr font) {
 	health_text.setString(s);
 	health_text.setColor(sf::Color::Red);
 
+	mana_text.setFont(*font);
+	s = "Mana: " + slava::toString(static_cast<int>(stats->mana_timer * 100)) + "%";
+	mana_text.setString(s);
+	mana_text.setColor(sf::Color::Red);
+
 	sp_text.setFont(*font);
 	s = "SP: " + slava::toString(stats->sp);
 	sp_text.setString(s);
@@ -43,15 +48,20 @@ void slava::HUD::draw(sf::RenderWindow& win) {
 
 	s = "Level: " + slava::toString(stats->level);
 	lvl_text.setString(s);
+
+	s = "Mana: " + slava::toString(static_cast<int>(stats->mana_timer * 100)) + "%";
+	mana_text.setString(s);
 	
 	
 	health_text.setPosition(x, y);
-	sp_text.setPosition(x, y + 40);
-	lvl_text.setPosition(x, y + 80);
+	mana_text.setPosition(x, y + 40);
+	sp_text.setPosition(x, y + 80);
+	lvl_text.setPosition(x, y + 120);
 	
 	win.draw(health_text);
 	win.draw(sp_text);
 	win.draw(lvl_text);
+	win.draw(mana_text);
 
 	if (stats->hit) {
 		sf::RectangleShape rect(win.getDefaultView().getSize());

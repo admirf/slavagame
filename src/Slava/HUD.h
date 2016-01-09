@@ -23,6 +23,7 @@ namespace slava
 		sf::Text health_text;
 		sf::Text sp_text;
 		sf::Text lvl_text;
+		sf::Text mana_text;
 		Stats* stats;
 		FontPtr font;
 		int x = 0, y = 0;

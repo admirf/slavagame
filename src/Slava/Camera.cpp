@@ -23,6 +23,10 @@ void slava::Camera::setOffset(int x, int y) {
 	offsetY = y;
 }
 
+slava::MapSize slava::Camera::getOffset() {
+	return MapSize{ offsetX, offsetY };
+}
+
 void slava::Camera::bindHUD(HUD* hud) {
 	this->hud = hud;
 	hasHUD = true;
@@ -106,6 +110,6 @@ void slava::Camera::update(sf::View& view) {
 	}
 	if (hasNotification) {
 		// Ne pitajte me za logiku iza moje matematike
-		notification->setPosition(view.getCenter().x - notification->getMessageWidth() * tileSize/2, view.getCenter().y + height/2 - height * 0.1);
+		notification->setPosition(view.getCenter().x - notification->getMessageWidth() * 5, view.getCenter().y + height/2 - height * 0.1);
 	}
 }

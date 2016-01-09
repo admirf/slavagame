@@ -45,6 +45,7 @@ namespace slava
 		void bindHUD(HUD*);
 		void bindNotification(Notification*);
 		void setAcceleration(int);
+		MapSize getOffset();
 	};
 
 }

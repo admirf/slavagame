@@ -12,6 +12,7 @@ namespace slava
 	{
 	public:
 		double health;
+		double mana_timer;
 		double acceleration;
 		// level sistem revamped
 		int level;

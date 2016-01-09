@@ -18,11 +18,11 @@ namespace slava
 		// sf::Time lastHit;
 		sf::Clock clock1;
 		bool hit = false;
-
 	public:
 		sf::Time reattack;
 		EnemyController(CharacterPtr);
 		void control(Character*);
+		void primitiveMove(int, int, int, Character*);
 	};
 
 }

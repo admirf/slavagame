@@ -9,6 +9,7 @@
 
 namespace slava
 {
+	typedef std::vector<std::vector<int>> DoubleArr;
 	typedef std::shared_ptr<sf::Texture> TexturePtr;
 	typedef std::vector<std::vector<std::shared_ptr<Tile> > > RawMap; // Nazalost ko ovo vidi nece nikad znat da sam ovo bio implementiro
 																	   // sa smart pointerima na vektore i bilo je jako sexy, al srecom
@@ -18,6 +19,14 @@ namespace slava
 
 	struct MapSize { int x; int y; };
 	MapSize getMapSize(const char*);
+
+	struct Coordinate {
+		int x, y;
+		Coordinate(int _x, int _y) {
+			x = _x;
+			y = _y;
+		}
+	};
 
 	/*
 	Klasa koja formira mapu igrice, zapravo formira dvije vrste niza, jedan pseudo 2d niz quadova koji se koristi za efikasno crtanje
@@ -29,6 +38,7 @@ namespace slava
 	private:
 		sf::VertexArray array;
 		sf::VertexArray secondLayer;
+		DoubleArr pathMatrix;
 		int blockSize;
 		MapSize mapSize;
 		RawMap map;
@@ -40,6 +50,7 @@ namespace slava
 		std::shared_ptr<Tile> tileAt(int, int);
 		MapSize getSize();
 		int getTileSize();
+		Coordinate getNextFromTo(Coordinate, Coordinate);
 	};
 
 }

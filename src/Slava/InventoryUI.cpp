@@ -26,7 +26,7 @@ slava::InventoryUI::InventoryUI(sf::Font& font, Items& it) {
 
 void slava::InventoryUI::control(GameWorld* world) {
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
 		this->active = false;
 		world->unpause();
 		return;
@@ -100,9 +100,9 @@ void slava::InventoryUI::control(GameWorld* world) {
 	int xC = world->getWindow()->getView().getCenter().x;
 	int yC = world->getWindow()->getView().getCenter().y;
 
-	
+	int half = world->getWindow()->getView().getSize().x / 3;
 
-	xC -= xC / 2;
+	xC -= half;
 	yC -= inven.getItemSize();
 
 	gold.setPosition(xC, yC - 40);

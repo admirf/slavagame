@@ -2,7 +2,13 @@
 #include "Utility.h"
 #include <fstream>
 #include <string>
+#include <queue>
 #include <iostream>
+
+const int INF = 1 << 29;
+const int moveSize = 4;
+const int moveX[4] = { 0,-1,1,0 };
+const int moveY[4] = { 1,0,0,-1 };
 
 slava::Map::Map(const char* path, TexturePtr texture, MapSize ms, int blockSize) {
 
@@ -46,12 +52,13 @@ slava::Map::Map(const char* path, TexturePtr texture, MapSize ms, int blockSize)
 
 	array.setPrimitiveType(sf::Quads);
 	array.resize(sizeY * sizeX * 4);
+	pathMatrix.resize(sizeY);
 	secondLayer.setPrimitiveType(sf::Quads);
 
 	for (int i = 0; i < sizeY; ++i) {
 
 		this->map[i].resize(sizeX); 
-
+		pathMatrix[i].resize(sizeX);
 		for (int j = 0; j < sizeX; ++j) {
 			char c;
 			mapa >> c; // i ovo da dozivim da koristim nesto sto smo radili na intru za programiranje
@@ -149,4 +156,59 @@ bool slava::Map::isOutOfRange(int x, int y) {
 
 slava::MapSize slava::Map::getSize() {
 	return this->mapSize;
+}
+
+slava::Coordinate slava::Map::getNextFromTo(Coordinate from, Coordinate to) {
+	//std::ofstream debugFile("pathdebug.txt");
+	for (int i = 0; i<this->pathMatrix.size(); i++) std::fill(pathMatrix[i].begin(), pathMatrix[i].end(), INF);
+	std::queue<Coordinate> toCheck;
+	while (!toCheck.empty())toCheck.pop();
+	this->pathMatrix[from.y][from.x] = 0;
+	toCheck.push(from);
+	int b = 0;
+	Coordinate currentTile(0, 0);
+	while (!toCheck.empty()) {
+		currentTile = toCheck.front();
+		toCheck.pop();
+		for (int directionIter = 0; directionIter<moveSize; directionIter++) {
+			b++;
+			if (this->isOutOfRange(currentTile.x + moveX[directionIter], currentTile.y + moveY[directionIter]) == false) {
+				if (this->pathMatrix[currentTile.y + moveY[directionIter]][currentTile.x + moveX[directionIter]] > this->pathMatrix[currentTile.y][currentTile.x] + 1) {
+					if (this->tileAt(currentTile.x + moveX[directionIter], currentTile.y + moveY[directionIter])->isWalkable == true) {
+
+
+
+						this->pathMatrix[currentTile.y + moveY[directionIter]][currentTile.x + moveX[directionIter]] = this->pathMatrix[currentTile.y][currentTile.x] + 1;
+						toCheck.push(Coordinate(currentTile.x + moveX[directionIter], currentTile.y + moveY[directionIter]));
+					}
+				}
+			}
+
+		}
+	}
+	// std::cout << b << '\n';
+	if (this->pathMatrix[to.y][to.x] == INF)return from;
+	currentTile = to;
+	Coordinate prevTile = to;
+	int currentMin;
+	int whereMin;
+	//debugFile <<"===================="<<'\n';
+	//debugFile << from.x << " " << from.y << " " << '\n';
+	//debugFile << to.x << " " << to.y << " " << '\n';
+	//debugFile << "koraci" << '\n';
+	while (true) {
+		if (this->pathMatrix[currentTile.y][currentTile.x] == 1) return currentTile;//{ debugFile.close(); return currentTile;}
+		for (int directionIter = 0; directionIter<moveSize; directionIter++) {
+			if (this->isOutOfRange(currentTile.x + moveX[directionIter], currentTile.y + moveY[directionIter]) == false) {
+				if (this->pathMatrix[currentTile.y + moveY[directionIter]][currentTile.x + moveX[directionIter]] == this->pathMatrix[currentTile.y][currentTile.x] - 1) {
+					whereMin = directionIter;
+				}
+			}
+		}
+		//debugFile<<currentTile.x << " " << currentTile.y << '\n';
+		prevTile.x = currentTile.x;
+		prevTile.y = currentTile.y;
+		currentTile.x += moveX[whereMin];
+		currentTile.y += moveY[whereMin];
+	}
 }

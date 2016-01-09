@@ -129,6 +129,14 @@ slava::Items* slava::GameWorld::getItems() {
 	return items;
 }
 
+slava::Camera* slava::GameWorld::getCamera() {
+	return this->camera;
+}
+
+void slava::GameWorld::quit() {
+	window->close();
+}
+
 void slava::GameWorld::update() {
 	if (!isAllSet()) return;
 
@@ -159,8 +167,12 @@ void slava::GameWorld::update() {
 
 	// Updatujemo kontrolu i animacije za ostale karaktere
 	for (auto& chars : characters) {
-		if(!isPaused && !chars.second->isDead())
+		if (!isPaused) {
 			chars.second->control();
+		}
+		else {
+			chars.second->stopMovement();
+		}
 		for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
 			chars.second->updateAnimation(i);
 	}
@@ -189,7 +201,7 @@ void slava::GameWorld::update() {
 			mainCharacter->updateAnimation(i);
 
 		for (auto& chars : characters) {
-			if(!isPaused && !chars.second->isDead())
+			if(!isPaused)
 				chars.second->control();
 			for (int i = 0; i < chars.second->getNumberOfAnimations(); ++i)
 				chars.second->updateAnimation(i);

@@ -19,9 +19,9 @@ slava::SkillUI::SkillUI(sf::Font& font){
 	endurance.setString("  Endurance ");
 	sEndurance.setFillColor(sf::Color(0, 0, 0, 180));
 
-	sStrength.setSize(sf::Vector2f(strength.getGlobalBounds().width, strength.getGlobalBounds().height + 10));
-	sMana.setSize(sf::Vector2f(mana.getGlobalBounds().width, mana.getGlobalBounds().height + 11));
-	sEndurance.setSize(sf::Vector2f(endurance.getGlobalBounds().width, endurance.getGlobalBounds().height + 11));
+	sStrength.setSize(sf::Vector2f(strength.getGlobalBounds().width, strength.getGlobalBounds().height + 11.6));
+	sMana.setSize(sf::Vector2f(mana.getGlobalBounds().width, mana.getGlobalBounds().height + 14));
+	sEndurance.setSize(sf::Vector2f(endurance.getGlobalBounds().width, endurance.getGlobalBounds().height + 14));
 }
 
 // Heeereeeee cooomeeees theee fiiiishhh!!!!
@@ -82,9 +82,9 @@ void slava::SkillUI::draw(sf::RenderWindow& win) {
 	int xC = win.getView().getCenter().x;
 	int yC = win.getView().getCenter().y;
 	
-	strength.setPosition(xC - 15.8 * 10, yC);
+	strength.setPosition(xC - 17 * 10, yC);
 	mana.setPosition(xC - 4 * 10, yC);
-	endurance.setPosition(xC + 6.1 * 10, yC);
+	endurance.setPosition(xC + 7 * 10, yC);
 
 	sStrength.setPosition(strength.getPosition());
 	sMana.setPosition(mana.getPosition());

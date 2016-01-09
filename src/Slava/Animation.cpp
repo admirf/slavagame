@@ -44,7 +44,7 @@ void slava::Animation::update() {
 		}
 		else if (count == originalCount) {
 			started = false;
-			this->animated->setTexture(originalTexture);
+			this->animated->getSprite()->setTexture(*originalTexture);
 		}
 	}
 }
