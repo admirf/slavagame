@@ -1,4 +1,5 @@
 #include "Notification.h"
+#include <string>
 
 void slava::Notification::setValues(FontPtr font, sf::Color color) {
 	this->color = color;
@@ -26,12 +27,32 @@ void slava::Notification::play(const char* msg) {
 	this->isPlayed = true;
 }
 
+void slava::Notification::play(std::string msg) {
+	if (isPlayed) return;
+
+	this->message = msg;
+	sf::Text text;
+	text.setFont(*this->font);
+	text.setColor(this->color);
+	text.setCharacterSize(35);
+	text.setString(message);
+	text.setPosition(x, y);
+	this->text = text;
+	clock.restart();
+	this->isPlayed = true;
+}
+
 void slava::Notification::clear() {
 	this->isPlayed = true;
 	this->duration = sf::milliseconds(1000);
 }
 
 void slava::Notification::play(const char* msg, sf::Time duration) {
+	play(msg);
+	setDuration(duration);
+}
+
+void slava::Notification::play(std::string msg, sf::Time duration) {
 	play(msg);
 	setDuration(duration);
 }
@@ -48,7 +69,9 @@ void slava::Notification::setColor(sf::Color color) {
 }
 
 int slava::Notification::getMessageWidth() {
-	return message.length();
+    int n;
+    for(n = 0; message[n] != '\n' && n < message.length(); ++n);
+	return n;
 }
 
 void slava::Notification::setDuration(sf::Time time) {
@@ -66,5 +89,5 @@ void slava::Notification::update(sf::RenderWindow& win) {
 			this->isPlayed = false;
 		}
 	}
-	
+
 }

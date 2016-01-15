@@ -1,0 +1,51 @@
+{
+["hip","hip"]
+(hip hip array!)
+}
+{
+To understand what recursion is, you must first understand recursion.
+}
+{
+A programmer started to cuss
+Because getting to sleep was a fuss
+As she lay there in bed
+Looping 'round in her head
+was: while(!asleep()) sheep++
+}
+{
+If you listen to a UNIX shell, can you hear the C?
+}
+{
+Old C programmers don't die, they're just cast into void.
+}
+{	
+Why doesn't C++ have a garbage collector?
+Because there would be nothing left!
+}
+{
+99 little bugs in the code,
+99 bugs in the code,
+fix one bug, compile again,
+100 little bugs in the code.
+100 little bugs in the code, ...
+}
+{
+Why did the programmer quit his job?
+Because he didn't get arrays.
+}
+{
+Why do java programmers have to wear glasses?
+Because they don't C#
+}
+{	
+How many programmers does it take to kill a cockroach? 
+Two: one holds, the other installs Windows on it
+}
+{
+The shortest programmer joke:
+"I'm nearly done!"
+}
+{
+Three programmers go into a bar and sit down at a table. 
+The first programmer holds up two fingers and says "Three beers".
+}

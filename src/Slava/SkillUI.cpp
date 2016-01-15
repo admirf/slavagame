@@ -27,7 +27,8 @@ slava::SkillUI::SkillUI(sf::Font& font){
 // Heeereeeee cooomeeees theee fiiiishhh!!!!
 void slava::SkillUI::control(GameWorld* world) {
 	sf::RenderWindow* win = world->getWindow();
-
+	world->getMainCharacter()->stopMovement();
+    world->pause();
 	auto coords = sf::Mouse::getPosition(*win);
 	auto worldCoords = win->mapPixelToCoords(coords);
 
@@ -81,7 +82,7 @@ void slava::SkillUI::control(GameWorld* world) {
 void slava::SkillUI::draw(sf::RenderWindow& win) {
 	int xC = win.getView().getCenter().x;
 	int yC = win.getView().getCenter().y;
-	
+
 	strength.setPosition(xC - 17 * 10, yC);
 	mana.setPosition(xC - 4 * 10, yC);
 	endurance.setPosition(xC + 7 * 10, yC);

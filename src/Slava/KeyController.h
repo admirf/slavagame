@@ -18,16 +18,18 @@ namespace slava
 	{
 	private:
 		sf::Clock clock;
-		
+
 	public:
 		// ~KeyController() {};
 
 		// Evo je control metoda
 		void control(Character* character) {
-
+            //std::cout<<character->getStats()->level << " " << character->getStats()->sp<<"\n";
 			// Provjeri jel skupljeno spa za level up
 			int lvl = character->getStats()->level;
-			if ((lvl + lvl / 4) * 1000 < character->getStats()->sp) {
+			int sp = character->getStats()->sp;
+			if( (lvl+lvl/4)*1000<sp){
+                    //std::cout<<sp<<" "<<lvl<<"\n";
 				character->levelUp();
 				// otvori Skill View
 				character->getGameWorld()->getUI("skillUI")->active = true;
@@ -37,7 +39,7 @@ namespace slava
 			int x = character->getSprite()->getPosition().x;
 			int y = character->getSprite()->getPosition().y;
 
-			std::cout << x << ':' << y << " in RawMap\n";
+			//std::cout << x << ':' << y << " in RawMap\n";
 
 			// Regeneracija healtha u ovisnosti levela igraca
 			if (character->getStats()->health < 1) {
@@ -47,7 +49,7 @@ namespace slava
 			if (character->getStats()->mana_timer < 1) {
 				character->getStats()->mana_timer += 0.0001 * character->getStats()->mana;
 			}
-			
+
 			// Obicna kontrola kretnje, ako tipka nije stisnuta treba zaustavljat karakter u tom smjeru
 			// Ove provjere valid movement point ovo ja sad cisto onako da vidim bil funkcionisalo i evo bi
 			// naravno ova sad implementacija za koliziju je dosta neprecizna i treba za svaki smjer napravit posebno provjeru mozel se ic dalje
@@ -104,8 +106,10 @@ namespace slava
 			// Igramo animaciju udarca koja je indexirana na nuli
 			// Stavljamo da je character u Attack modu
 			// restartujemo sat koji mjeri vrijeme od zadnjeg napada
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			//if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)||sf::Keyboard::isKeyPressed(sf::Keyboard::L)){
 				if (clock.getElapsedTime().asMilliseconds() > ATTACK_LENGTH) {
+                    //std::cout<<"MARNO SAM GA"<<'\n';
 					character->playAnimation(0);
 					character->isAttack = true;
 					character->isBlock = false;
@@ -113,11 +117,11 @@ namespace slava
 					// character->getGameWorld()->getNotification()->play("You hit the bastard!");
 					// character->hit();
 				}
-				
+
 			}
 
 			// Ako je igras udario srednji mis radimo isto ko i za obicni napad samo mana napad
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) && character->getStats()->mana_timer >= 1) {
+			if ((sf::Mouse::isButtonPressed(sf::Mouse::Middle)||sf::Keyboard::isKeyPressed(sf::Keyboard::M)) && character->getStats()->mana_timer >= 1) {
 				if (clock.getElapsedTime().asMilliseconds() > ATTACK_LENGTH) {
 					character->playAnimation(1);
 					character->isManaAttack = true;
@@ -147,7 +151,7 @@ namespace slava
 				character->getGameWorld()->pause();
 				return;
 			}
-			
+
 		}
 	};
 

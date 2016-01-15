@@ -1,4 +1,7 @@
 #include "GameWorld.h"
+#include <fstream>
+#include <ctime>
+#include <cstdlib>
 
 slava::GameWorld::GameWorld(sf::RenderWindow* win, Map* mapa): window(win), map(mapa) {
 	for (int i = 0; i < 5; ++i) isSet[i] = false;
@@ -89,7 +92,7 @@ void slava::GameWorld::restart() {
 	this->notification->clear();
 	this->mainCharacter->getStats()->health = 1;
 	this->mainCharacter->getStats()->sp = 0;
-	finished = false; 
+	finished = false;
 }
 
 sf::RenderWindow* slava::GameWorld::getWindow() {
@@ -100,7 +103,7 @@ void slava::GameWorld::addUI(UI* view) {
 	views[view->id] = view;
 }
 
-slava::UI* slava::GameWorld::getUI(const char* id) {
+slava::UI* slava::GameWorld::getUI(std::string id) {
 	return views[id];
 }
 
@@ -114,6 +117,29 @@ std::shared_ptr<slava::DialogNode> slava::GameWorld::getDialog(const char* key) 
 
 void slava::GameWorld::setCurrentDialog(const char* key) {
 	currentDialog = dialogs[key];
+}
+
+void slava::GameWorld::loadRandomJokes(std::string path){
+    std::ifstream inputFile(path);
+    randomJokes.clear();
+    std::string tmpStr;
+    std::string toAdd;
+    toAdd.clear();
+    while(getline(inputFile,tmpStr)){
+        while(true){
+            getline(inputFile,tmpStr);
+            if(tmpStr=="}")break;
+            toAdd+=(tmpStr+"\n");
+        }
+        randomJokes.push_back(toAdd);
+        toAdd.clear();
+    }
+    inputFile.close();
+}
+
+std::string slava::GameWorld::getRandomJoke(){
+    std::srand(static_cast<unsigned int>(std::time(0)));
+    return randomJokes[rand()%randomJokes.size()];
 }
 
 std::shared_ptr<slava::DialogNode> slava::GameWorld::getCurrentDialog() { return currentDialog; }
@@ -139,7 +165,7 @@ void slava::GameWorld::quit() {
 
 void slava::GameWorld::update() {
 	if (!isAllSet()) return;
-
+    //std::cout<<"ADRESA JE: "<<getUI("scoreboardUI")<<"\n";
 	// Postavljamo kameru
 	camera->update(*customView);
 
@@ -185,11 +211,12 @@ void slava::GameWorld::update() {
 	// Provjeravamo na evente
 	while (window->pollEvent(event))
 	{
+
 		if (event.type == sf::Event::Closed)
 			window->close();
 
 		// Kontrola viewova, tj. UI elemenata
-		for (auto& view : views) { 
+		for (auto& view : views) {
 			if(view.second->active)
 				view.second->control(this);
 		}
@@ -237,7 +264,7 @@ void slava::GameWorld::update() {
 	// crtamo Viewove, ili ti ga UI elemente
 	for (auto& view : views) {
 		if(view.second->active)
-			view.second->draw(*this->window);
+			{view.second->draw(*this->window);}
 	}
 
 	// postavljamo prozor na nas view (zbog kamere)

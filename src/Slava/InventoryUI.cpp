@@ -1,5 +1,6 @@
 #include "InventoryUI.h"
 #include "GameWorld.h"
+#include <algorithm>
 
 slava::InventoryUI::InventoryUI(sf::Font& font, Items& it) {
 	inven = it;
@@ -31,7 +32,7 @@ void slava::InventoryUI::control(GameWorld* world) {
 		world->unpause();
 		return;
 	}
-
+    world->getMainCharacter()->stopMovement();
 	sf::RenderWindow* win = world->getWindow();
 	auto coords = sf::Mouse::getPosition(*win);
 	auto worldCoords = win->mapPixelToCoords(coords);
@@ -39,7 +40,7 @@ void slava::InventoryUI::control(GameWorld* world) {
 	int xM = worldCoords.x;
 	int yM = worldCoords.y;
 
-	
+
 
 	if (contains(use, xM, yM) && !sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		use.setFillColor(sf::Color(0, 0, 0, 180));
@@ -47,22 +48,12 @@ void slava::InventoryUI::control(GameWorld* world) {
 	else {
 		use.setFillColor(sf::Color(0, 0, 0, 120));
 	}
-	
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		for (int i = 0; i < 10; ++i) {
 			if (contains(items[i], xM, yM)) {
 				items[current].setOutlineColor(sf::Color(0, 0, 0, 0));
 				current = i;
-				break;
-			}
-		}
-	}
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-		for (int i = 0; i < 10; ++i) {
-			if (contains(items[i], xM, yM)) {
-				items[current].setOutlineColor(sf::Color(0, 0, 0, 0));
-				current = i;
-				world->getMainCharacter()->removeItem(i);
 				break;
 			}
 		}
@@ -78,15 +69,29 @@ void slava::InventoryUI::control(GameWorld* world) {
 				world->getMainCharacter()->currentShield = it;
 			}
 			else {
+                std::cout << "Desi se" << std::endl;
 				Stats* stats = world->getMainCharacter()->getStats();
 				stats->endurance += it->enduranceEffect;
-				stats->health = it->healthEffect;
-				stats->mana += it->manaEffect;
+				stats->health += it->healthEffect;
+				stats->health = std::min(stats->health, 1.0);
+				stats->mana_timer += it->manaEffect;
+				stats->mana_timer = std::min(stats->mana_timer,1.0);
 				stats->strength += it->strengthEffect;
+                world->getMainCharacter()->removeItem(current);
 			}
 		}
 	}
-	
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+		for (int i = 0; i < 10; ++i) {
+			if (contains(items[i], xM, yM)) {
+				items[current].setOutlineColor(sf::Color(0, 0, 0, 0));
+				current = i;
+				world->getMainCharacter()->removeItem(i);
+				break;
+			}
+		}
+	}
+
 	items[current].setOutlineColor(sf::Color(0, 0, 0, 180));
 	int iType = world->getMainCharacter()->getItem(current);
 
@@ -138,8 +143,8 @@ void slava::InventoryUI::control(GameWorld* world) {
 	int pX = xC + inven.getItemSize() * 4;
 	use.setPosition(pX, yC);
 	useText.setPosition(pX + 30, yC + 4.5);
-	
-	
+
+
 
 }
 

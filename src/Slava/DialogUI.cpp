@@ -26,6 +26,8 @@ void slava::DialogUI::control(GameWorld* world) {
 
 	auto coords = sf::Mouse::getPosition(*win);
 	auto worldCoords = win->mapPixelToCoords(coords);
+	world->getMainCharacter()->stopMovement();
+    world->pause();
 
 	int xM = worldCoords.x;
 	int yM = worldCoords.y;
@@ -77,7 +79,7 @@ void slava::DialogUI::draw(sf::RenderWindow& win) {
 		else {
 			answers[i].setString("  ...");
 		}
-		
+
 		answers[i].setPosition(xC - 200, yC + 60 * i);
 		sAnswers[i].setPosition(xC - 200, yC + 60 * i - 10);
 		win.draw(sAnswers[i]);
@@ -86,7 +88,7 @@ void slava::DialogUI::draw(sf::RenderWindow& win) {
 
 	question.setPosition(xC - 200, yC - 60);
 	sQuestion.setPosition(xC - 200, yC - 80);
-	
+
 
 	win.draw(sQuestion);
 	win.draw(question);

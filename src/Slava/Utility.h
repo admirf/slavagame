@@ -3,22 +3,35 @@
 
 #include <iostream>
 #include <sstream>
+#include <string>
 #include <memory>
 #include <iostream>
+#include <cstring>
 #include <SFML\Graphics.hpp>
 
 // Pomocne funkcije
 
 namespace slava
 {
+    const int NUMSAVES=3;
 	typedef std::shared_ptr<sf::Font> FontPtr;
 	typedef std::shared_ptr<sf::Texture> TexturePtr;
-
+    static bool customCompare(const std::string &a, const std::string &b){
+        if(a.size()!=b.size()) return a.size()<b.size();
+        for(int i=0; i<a.size();i++){
+            if(a[i]!=b[i])return a[i]<b[i];
+        }
+        return true;
+    }
 	// Check if coordinates are in rectangle
 	static bool contains(sf::RectangleShape& shape, int x, int y) {
 		return shape.getGlobalBounds().contains(sf::Vector2f(x, y));
 	}
-
+    static bool compareStr(const char *a, const char *b){
+        int len=std::min(strlen(a),strlen(b));
+        for(int i = 0; i < len; i ++) if(a[i]!=b[i])return false;
+        return true;
+    }
 	// Pomocna funkcija za brzo formiranje quada u mapi
 	static sf::VertexArray getQuad(int textureIndex, int size, int x, int y) {
 

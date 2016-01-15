@@ -1,5 +1,8 @@
 #include "PauseUI.h"
+#include<map>
+#include "SaveGameUI.h"
 #include "GameWorld.h"
+
 
 slava::PauseUI::PauseUI(sf::Font& font) {
 	resume.setFont(font);
@@ -24,7 +27,12 @@ slava::PauseUI::PauseUI(sf::Font& font) {
 
 void slava::PauseUI::control(GameWorld* world) {
 	sf::RenderWindow* win = world->getWindow();
-
+    std::unordered_map<const char*, slava::CharacterPtr>::iterator it;
+    for(it=world->getCharacters().begin(); it!=world->getCharacters().end();it++){
+        it->second->stopMovement();
+    }
+    world->getMainCharacter()->stopMovement();
+    world->pause();
 	auto coords = sf::Mouse::getPosition(*win);
 	auto worldCoords = win->mapPixelToCoords(coords);
 
@@ -56,7 +64,11 @@ void slava::PauseUI::control(GameWorld* world) {
 			world->unpause();
 		}
 		if (contains(sShape, xM, yM)) {
-
+            this->active=false;
+            world->getUI("saveGameUI")->active=true;
+            /*for(auto i:world->views){
+                if(compareStr(i.first,"saveGameUI"))i.second->active=true;
+            }*/
 		}
 		if (contains(qShape, xM, yM)) {
 			world->quit();

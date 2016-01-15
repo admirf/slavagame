@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Slava" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Slava" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="..\SFML-2.3.2\lib\libsfml-graphics-d.a" />
+					<Add library="..\SFML-2.3.2\lib\libsfml-system-d.a" />
+					<Add library="..\SFML-2.3.2\lib\libsfml-window-d.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Slava" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="..\SFML-2.3.2\lib\libsfml-graphics.a" />
+					<Add library="..\SFML-2.3.2\lib\libsfml-system.a" />
+					<Add library="..\SFML-2.3.2\lib\libsfml-window.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-static-libgcc" />
+			<Add option="-static-libstdc++" />
+			<Add directory="../SFML-2.3.2/include" />
+		</Compiler>
+		<Linker>
+			<Add option="-static-libgcc" />
+			<Add option="-static-libstdc++" />
+			<Add directory="../SFML-2.3.2/lib" />
+		</Linker>
+		<Unit filename="Animation.cpp" />
+		<Unit filename="Animation.h" />
+		<Unit filename="Camera.cpp" />
+		<Unit filename="Camera.h" />
+		<Unit filename="Character.cpp" />
+		<Unit filename="Character.h" />
+		<Unit filename="Dialog.h" />
+		<Unit filename="DialogUI.cpp" />
+		<Unit filename="DialogUI.h" />
+		<Unit filename="EnemyController.cpp" />
+		<Unit filename="EnemyController.h" />
+		<Unit filename="EnemyFactory.h" />
+		<Unit filename="GameWorld.cpp" />
+		<Unit filename="GameWorld.h" />
+		<Unit filename="HUD.cpp" />
+		<Unit filename="HUD.h" />
+		<Unit filename="IController.h" />
+		<Unit filename="InventoryUI.cpp" />
+		<Unit filename="InventoryUI.h" />
+		<Unit filename="KeyController.h" />
+		<Unit filename="Map.cpp" />
+		<Unit filename="Map.h" />
+		<Unit filename="NPC.h" />
+		<Unit filename="Notification.cpp" />
+		<Unit filename="Notification.h" />
+		<Unit filename="SkillUI.cpp" />
+		<Unit filename="SkillUI.h" />
+		<Unit filename="Stats.h" />
+		<Unit filename="Tile.h" />
+		<Unit filename="TileFactory.h" />
+		<Unit filename="Trigger.cpp" />
+		<Unit filename="Trigger.h" />
+		<Unit filename="UI.h" />
+		<Unit filename="Utility.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

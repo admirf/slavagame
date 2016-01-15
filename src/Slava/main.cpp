@@ -1,16 +1,22 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <fstream>
 #include "Character.h"
+#include "ScoreboardUI.h"
+#include "LoadGameUI.h"
 #include "KeyController.h"
 #include "HUD.h"
 #include "Camera.h"
+#include "MainMenuUI.h"
 #include "EnemyFactory.h"
 #include "Utility.h"
+#include "SaveGameUI.h"
 #include "Map.h"
 #include "TileFactory.h"
 #include "Notification.h"
 #include "GameWorld.h"
 #include "SkillUI.h"
+#include <string>
 #include "NPC.h"
 #include "Dialog.h"
 #include "DialogUI.h"
@@ -25,6 +31,27 @@ using namespace std;
 using namespace slava;
 
 double diff = 0;
+
+void addHealthPotion(GameWorld* world){
+    if(world->getMainCharacter()->canAddItem()&&world->getMainCharacter()->getStats()->gold>=100){
+        world->getMainCharacter()->addItem(5);
+        world->getMainCharacter()->getStats()->gold-=100;
+        world->getNotification()->play("Health potion added.\n100 gold removed.");
+    }else{
+        world->getNotification()->play("Cannot add item.");
+    }
+
+}
+
+void addManaPotion(GameWorld* world){
+    if(world->getMainCharacter()->canAddItem()&&world->getMainCharacter()->getStats()->gold>=150){
+        world->getMainCharacter()->addItem(6);
+        world->getMainCharacter()->getStats()->gold-=150;
+        world->getNotification()->play("Mana potion added.\n150 gold removed.");
+    }else{
+        world->getNotification()->play("Cannot add item.");
+    }
+}
 
 bool gameOver(GameWorld* world) {
 	if (world->getMainCharacter()->isDead()) return true;
@@ -55,8 +82,11 @@ void hackAround(GameWorld* world) {
 
 void odjednom(GameWorld* world) {
 	world->getCharacters()["enemy1"]->alive();
+	world->getCharacters()["enemy1"]->getSprite()->setPosition(14 * BLOCK_SIZE, 15 * BLOCK_SIZE);
 	world->getCharacters()["enemy2"]->alive();
+	world->getCharacters()["enemy2"]->getSprite()->setPosition(17 * BLOCK_SIZE, 15 * BLOCK_SIZE);
 	world->getCharacters()["enemy3"]->alive();
+	world->getCharacters()["enemy3"]->getSprite()->setPosition(20 * BLOCK_SIZE, 15 * BLOCK_SIZE);
 }
 
 void samoJedan(GameWorld* world) {
@@ -72,7 +102,6 @@ int main()
 	auto txt = loadTexture("tileset1.png");
 	auto font = loadFont("Marlboro.ttf");
 	auto item_tileset = loadTexture("inventory_tile_set.png");
-
 	// Prozor
 	sf::RenderWindow window(sf::VideoMode(WIN_SIZE_X, WIN_SIZE_Y), "Slava");
 	window.setFramerateLimit(60);
@@ -81,7 +110,7 @@ int main()
 	// Mapa
 	MapSize ms = getMapSize("mapa1.txt");
 	Map map("mapa1.txt", txt, ms, BLOCK_SIZE);
-
+    std::cout<<"STIGAO DO" << '\n';
 	// kreacija svijeta, mora bit poslije mape i prozora, a prije charactera da bi mogli stavit u character referencu na game world
 	GameWorld* world = new GameWorld(&window, &map);
 
@@ -91,7 +120,9 @@ int main()
 		createItem("Sword of Recklesness", SWORD, 0, 0, 0.15, 0, 0),
 		createItem("Sword of Holy Light", SWORD, 0, 0, 0.20, 0, 0),
 		createItem("Sword of the Conqueror", SWORD, 0, 0, 0.25, 0, 0),
-		createItem("Shield of Righteousnous", SHIELD, 0, 0.25, 0, 0, 0)
+		createItem("Shield of Righteousnous", SHIELD, 0, 0.25, 0, 0, 0),
+		createItem("Health potion",POTION,0.4,0,0,0,0),
+		createItem("Mana potion",POTION,0,0,0,0.4,0)
 	};
 	Items items(item_tileset, 128, items_vector);
 
@@ -105,7 +136,6 @@ int main()
 	trigger.fireOnce = false;
 	trigger.setTrigger(triNapadaTrigger);
 	trigger.setRun(triNapada);
-
 	// Main character
 	auto character = make_shared<Character>("feha");
 	character->setMap(&map);
@@ -118,6 +148,7 @@ int main()
 	character->getSprite()->setPosition(0, 1000);
 	character->addItem(1);
 	character->addItem(4);
+	character->addItem(5);
 	character->currentShield = items.getItem(4);
 	character->currentWeapon = items.getItem(1);
 	/*character->addItem(1);
@@ -190,6 +221,32 @@ int main()
 	ljubomir->setGameWorld(world);
 	ljubomir->getSprite()->setPosition(15 * BLOCK_SIZE, 15 * BLOCK_SIZE);
 
+    auto merchant = make_shared<Character>("vlatko");
+    merchant->setMap(&map);
+    merchant->setTexture(loadTexture("merchant.png"));
+    merchant->setController(new NPC(character));
+    merchant->setGameWorld(world);
+    merchant->getSprite()->setPosition(87 * BLOCK_SIZE, 88 * BLOCK_SIZE);
+    merchant->addItem(5);
+    merchant->addItem(6);
+
+
+    //53 98
+    auto princess = make_shared<Character>("princess");
+    princess->setMap(&map);
+    princess->setTexture(loadTexture("princess.png"));
+    princess->setController(new NPC(character,true));
+    princess->setGameWorld(world);
+    princess->getSprite()->setPosition(98 * BLOCK_SIZE, 53* BLOCK_SIZE);
+
+    auto dialogTrade = Dialog::createDialog();
+	dialogTrade->question = "Items to buy\n";
+	dialogTrade->answers = {
+		"Health potion - 100g", "Mana potion - 150g", "", ""
+	};
+	Dialog::setAction(dialogTrade,0,addHealthPotion);
+	Dialog::setAction(dialogTrade,1,addManaPotion);
+
 	auto dialogL1 = Dialog::createDialog();
 	dialogL1->question = "What do you want with me?";
 	dialogL1->answers = {
@@ -225,6 +282,46 @@ int main()
 	Dialog::setAction(dialogL4, 0, samoJedan);
 
 
+    //ERINA GOVNA
+    /**pocetak govana*/
+    auto zlatan = make_shared<Character>("zlatan");
+	zlatan ->setMap(&map);
+	zlatan ->setTexture(loadTexture("sluga.png"));
+	zlatan ->setController(new NPC(character));
+	zlatan ->setGameWorld(world);
+	zlatan ->getSprite()->setPosition(3* BLOCK_SIZE,65 * BLOCK_SIZE);
+
+    auto introD = Dialog::createDialog();
+	introD->question = "My lord, do you know what is new?";
+	introD->answers={
+		"No! How can i know?",
+		"Talk fast, im in a hurry!",
+		"I am not interested.",
+		"You really are annoying! Talk fast."
+	};
+	auto introD2 = Dialog::createDialog();
+	introD2->question = "King Stjepan is dead. New king wants\n you to join his forces! He wants\n you to come to his castle.";
+	introD2->answers={
+		"Why haven't you told me earlier?",
+		"I don't care about that.",
+		"Stjepan... dead... I must go.",
+		""
+	};
+	Dialog::connect(introD, 0, introD2);
+	Dialog::connect(introD, 1, introD2);
+	Dialog::connect(introD, 3, introD2);
+	auto introD3 = Dialog::createDialog();
+	introD3->question = "But sir, the king is dead and\n Tvrtko became the new king";
+	introD3->answers={
+		"Stjepan... dead... I must go.",
+		"",
+		"",
+		""
+	};
+	Dialog::connect(introD, 2, introD3);
+	Dialog::connect(introD2,0, introD3);
+    /**kraj govana*/
+
 	// Skill UI
 	auto skillView = make_shared<SkillUI>(*font);
 	skillView->active = false;
@@ -244,7 +341,34 @@ int main()
 	auto pauseUI = make_shared<PauseUI>(*font);
 	pauseUI->active = false;
 	pauseUI->id = "pauseUI";
-	
+
+    // Main Menu UI
+	auto mainMenuUI = make_shared<MainMenuUI>(*font);
+	mainMenuUI->active=true;
+	mainMenuUI->id = "mainMenuUI";
+
+    // Load scoreboards
+    std::vector<std::string> loadedScores;
+    std::ifstream inputScores("scoreboard.txt");
+    string tempScore;
+    while(inputScores>>tempScore){
+        loadedScores.push_back(tempScore);
+    }
+    inputScores.close();
+    // Scoreboard UI
+	auto scoreboardUI = make_shared<ScoreboardUI>(*font, loadedScores);
+	scoreboardUI->active=false;
+	scoreboardUI->id = "scoreboardUI";
+
+    //Load Game UI
+    auto loadGameUI = make_shared<LoadGameUI>(*font,"savegames.txt");
+    loadGameUI->active=false;
+    loadGameUI->id="loadGameUI";
+
+    auto saveGameUI = make_shared<SaveGameUI>(*font,"savegames.txt");
+    saveGameUI->active=false;
+    saveGameUI->id="saveGameUI";
+
 	// HUD, Notifikacije i Kamera
 	HUD hud(character->getStats(), font);
 	Notification notification(font, sf::Color::Red);
@@ -263,34 +387,51 @@ int main()
 	world->addCharacter(enemy2);
 	world->addCharacter(enemy3);
 	world->addCharacter(tvrtko);
+	world->addCharacter(princess);
 	world->addCharacter(ljubomir);
+	world->addCharacter(merchant);
+	world->addCharacter(zlatan);
 	world->setCamera(&cam);
 	world->setHUD(&hud);
 	world->addUI(skillView.get());
 	world->addUI(dialogUI.get());
 	world->addUI(inventoryUI.get());
 	world->addUI(pauseUI.get());
+	world->addUI(scoreboardUI.get());
+	world->addUI(mainMenuUI.get());
+	world->addUI(loadGameUI.get());
+	world->addUI(saveGameUI.get());
 	world->setNotification(&notification);
 	world->setView(&customView);
 	world->addDialog(dialogT1, "tvrtko"); // ime dialoga mora bit jednako imenu npc-a za koji je vezan
 	world->addDialog(dialogL1, "ljubomir"); // ponavljam kljuc/ime dialoga mora bit jednako ID-u npc-a za koji zelite da izazove dialog
+	world->addDialog(dialogTrade,"vlatko");
+	world->addDialog(introD,"zlatan");
 	world->setItems(&items);
 	world->addTrigger(&trigger);
 	world->addTrigger(&gameOverTrigger);
-
 	string over = "Game over. Press space to play again.";
+
+	//Load random jokes
+
+    world->loadRandomJokes("jokes.txt");
 
 	// Update-ujemo svijet, ovako imamo kontrolu mjenjat svijetove tj. levele ako nam je game loop izvan GameWorld klase
 	// posto ce world bit level, treba provjeravat jel finished, ako jest crtamo taj svijet, ako nije saltamo na sljedeci bla bla bla
+    //std::cout<<"ADRESA JE: "<<world->getUI("scoreboardUI")<<"\n";
+    //std::cout<<world->getRandomJoke()<<"\n";
 	while (window.isOpen()) {
+
 		if (!world->isFinished()) {
 			world->update();
+			//std::cout<<world->getUI("mainMenuUI")<<'\n';
 		}
 		else {
 
 			sf::Event event;
 			while (window.pollEvent(event)) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                        std::cout<<"SPEJS" << '\n';
 					character->getSprite()->setPosition(0, 1000);
 					enemy1->getStats()->health = -1;
 					enemy2->getStats()->health = -1;
@@ -312,7 +453,7 @@ int main()
 
 	// delete skillView;
 	delete world;
-	
+
 
 	return 0;
 }

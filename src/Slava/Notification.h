@@ -20,12 +20,14 @@ namespace slava
 		int x = 0, y = 0;
 		bool isPlayed = false;
 		sf::Time duration;
-		
+
 		// static std::shared_ptr<Notification> instance;
 	public:
 		Notification(FontPtr, sf::Color);
 		void play(const char*);
+		void play(std::string);
 		void play(const char*, sf::Time);
+		void play(std::string, sf::Time);
 		void setDuration(sf::Time);
 		void update(sf::RenderWindow& win);
 		int getMessageWidth();

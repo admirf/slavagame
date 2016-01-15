@@ -14,9 +14,10 @@
 #include <unordered_map>
 #include <vector>
 
-namespace slava 
+namespace slava
 {
 	typedef std::shared_ptr<GameWorld> GameWorldPtr;
+	class UI;
 	class GameWorld
 	{
 	private:
@@ -25,14 +26,14 @@ namespace slava
 		std::unordered_map<const char*, CharacterPtr> characters;
 		std::unordered_map<const char*, Trigger*> triggers;
 		std::unordered_map<const char*, Animation*> animations;
-		std::unordered_map<const char*, UI*> views;
+        std::vector<std::string> randomJokes;
 		std::unordered_map<const char*, std::shared_ptr<DialogNode> > dialogs;
 		std::shared_ptr<DialogNode> currentDialog;
 		std::vector<const char*> toBeRemoved;
 		std::vector<const char*> triggersToBeRemoved;
 
 		Items* items;
-		
+
 		Camera* camera;
 		HUD* hud;
 		Notification* notification;
@@ -43,9 +44,12 @@ namespace slava
 		bool isPaused = false;
 
 	public:
+	    void loadRandomJokes(std::string);
+	    std::string getRandomJoke();
+	    std::unordered_map<std::string, UI*> views;
 		GameWorld(sf::RenderWindow*, Map*);
 		void addUI(UI*);
-		UI* getUI(const char*);
+		UI* getUI(std::string);
 		void setMainCharacter(CharacterPtr);
 		void addCharacter(CharacterPtr);
 		void addCharacters(std::vector<CharacterPtr>&);

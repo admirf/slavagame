@@ -10,6 +10,7 @@
 #include "Inventory.h"
 #include <vector>
 #include <memory>
+#include <fstream>
 
 namespace slava
 {
@@ -124,7 +125,8 @@ namespace slava
 		void block();
 		void unblock();
 		void setBlockTexture(TexturePtr);
-
+        void exportCharStats(std::string, int);
+        bool importCharStats(std::string, int);
 		/*
 		bool collision(std::shared_ptr<Character>);
 		void addCollidableCharacter(std::shared_ptr<Character>);
@@ -136,6 +138,7 @@ namespace slava
 		void addItem(int);
 		int getItem(int);
 		void removeItem(int);
+        bool canAddItem();
 
 		void levelUp();
 		void increaseSkill(skills);

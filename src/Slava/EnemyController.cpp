@@ -115,7 +115,7 @@ void slava::EnemyController::control(Character* enemy) {
 			// enemy->gotHit();
 		}
 		// provjera za mana napad
-		
+
 	}
 	else {
 		if (dist<1500) {
@@ -138,14 +138,27 @@ void slava::EnemyController::control(Character* enemy) {
 
 	if (enemy->isDead()) {
 		int rnd = rand() % 200 + 1;
+		rnd=rand()%100;
 		std::string s = "Enemy looted.\n" + toString(rnd) + " Gold loot added to inventory.";
+		if(rnd>50&&this->player->canAddItem()){
+            if(rnd>75){
+                s+="\nHealth potion added!";
+                this->player->addItem(5);
+            }else{
+                s+="\nMana potion added!";
+                this->player->addItem(6);
+            }
+
+		}
+
 		this->player->getGameWorld()->getNotification()->play(s.c_str());
 		// enemy->alive();
 		// enemy->getSprite()->setPosition(0, 0);
 		this->player->getStats()->sp += 200;
 		this->player->getStats()->gold += rnd;
+
 	}
-	
+
 
 	// std::cout << enemy->getStats()->health * 100 << std::endl;
 

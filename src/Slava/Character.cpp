@@ -2,11 +2,21 @@
 #include "Stats.h"
 #include "GameWorld.h"
 #include <ctime>
+#include <sstream>
+#include <fstream>
+#include <string>
 #include <cstdlib>
 #include <memory>
 #include <iostream>
 #define MIN(a, b) a > b? b: a
 #define MAX(a, b) a > b? a: b
+
+slava::Position slava::Character::getPositionOnTile(int tileSize) {
+	Position p;
+	p.x = this->sprite->getPosition().x / tileSize;
+	p.y = this->sprite->getPosition().y / tileSize;
+	return p;
+}
 
 slava::Character::~Character() {
 	delete sprite;
@@ -28,6 +38,122 @@ void slava::Character::alive() {
 
 const char* slava::Character::getID() {
 	return this->id;
+}
+
+/**OPIS SAVEFILEA:
+    game state ce se ucitavati u LoadGameUI, u sustini to su samo char stats, position na mapi
+    i inventory
+    exportCharStats uzima string path za datoteku koja sadrzi saveove i int saveIndex koji govori
+    u koji save slot se spasava
+    za sad ce imati 3 slota koja su fiksna
+    opis saveFilea:
+    3 slota
+
+    opis slota:
+    pocinje sa {
+        bool empty
+        double x double y
+        stats
+        inventory
+    zavrsava sa }
+*/
+
+
+void slava::Character::exportCharStats(std::string path, int saveIndex){
+    //std::pair<double,double> charPos= std::make_pair(get,vY);
+    slava::Position charPos=this->getPositionOnTile(getMap()->getTileSize());
+    slava::Stats* charStats=this->stats;
+    std::vector<int> charInventory=this->inventory;
+    std::ifstream inputFile(path);
+    std::stringstream contentToExport;
+    std::string thisLine;
+    std::string junk;
+    for(int i=0;i<slava::NUMSAVES;i++){
+        if(i==saveIndex){
+            getline(inputFile,thisLine); // ucitavanje { znaka
+            contentToExport<<thisLine<<std::endl;
+            while(junk!="}"){
+                getline(inputFile,junk);
+            }
+            contentToExport<<0<<std::endl;
+            contentToExport<<charPos.x<<" "<<charPos.y<<std::endl;
+            contentToExport<<charStats->health<<std::endl;
+            contentToExport<<charStats->mana_timer<<std::endl;
+            contentToExport<<charStats->acceleration<<std::endl;
+            contentToExport<<charStats->level<<std::endl;
+            contentToExport<<charStats->gold<<std::endl;
+            contentToExport<<charStats->strength<<std::endl;
+            contentToExport<<charStats->endurance<<std::endl;
+            contentToExport<<charStats->mana<<std::endl;
+            contentToExport<<charStats->limit<<std::endl;
+            contentToExport<<charStats->hit<<std::endl;
+            contentToExport<<charStats->sp<<std::endl;
+            contentToExport<<charInventory.size()<<std::endl;
+            for(int inventI=0;inventI<charInventory.size();inventI++)
+                contentToExport<<charInventory[inventI]<<std::endl;
+            contentToExport<<"}"<<std::endl;
+        }else{
+            thisLine.clear();
+            while(thisLine!="}"){
+                getline(inputFile,thisLine); // ucitavanje { znaka
+                contentToExport<<thisLine<<std::endl;
+            }
+        }
+    }
+    inputFile.close();
+    std::ofstream outputFile(path);
+    outputFile<<contentToExport.str()<<std::endl;
+    outputFile.close();
+    std::ofstream scoreboardOutputFile("scoreboard.txt",std::ofstream::app);
+    scoreboardOutputFile<<charStats->sp<<std::endl;
+    scoreboardOutputFile.close();
+}
+
+bool slava::Character::importCharStats(std::string path, int saveIndex){
+    std::string temp;
+    std::ifstream inputFile(path);
+    bool emptySave;
+    for(int i=0; i<slava::NUMSAVES;i++){
+        if(i==saveIndex){
+            std::cout<<i<<"\n";
+            getline(inputFile,temp);
+            inputFile>>emptySave;
+            if(emptySave){inputFile.close();return false;}
+
+            slava::Position charPos;
+            slava::Stats charStats;
+            inputFile>>charPos.x >> charPos.y;
+            std::cout<<charPos.x<< " " << charPos.y<<"\n";
+            getSprite()->setPosition(charPos.x*getMap()->getTileSize(),charPos.y*getMap()->getTileSize());
+            inputFile>>charStats.health;
+            inputFile>>charStats.mana_timer;
+            inputFile>>charStats.acceleration;
+            inputFile>>charStats.level;
+            inputFile>>charStats.gold;
+            inputFile>>charStats.strength;
+            inputFile>>charStats.endurance;
+            inputFile>>charStats.mana;
+            inputFile>>charStats.limit;
+            inputFile>>charStats.hit;
+            inputFile>>charStats.sp;
+            //std::cout<<"\n";
+           // std::cout<<charStats.sp<<" "<<charStats.level<<"\n";
+            setStats(&charStats);
+            //std::cout<<charStats.sp<<" "<<charStats.level<<"\n";
+            int charInvSize;
+            inputFile>>charInvSize;
+            inventory.resize(charInvSize);
+            for(int inventI=0;inventI<charInvSize;inventI++)
+                inputFile>>inventory[inventI];
+        }else{
+            temp.clear();
+            while(temp!="}"){
+                getline(inputFile,temp);
+            }
+        }
+    }
+    inputFile.close();
+    return true;
 }
 
 void slava::Character::init() {
@@ -65,6 +191,8 @@ slava::Character::Character(const char* id, sf::Texture* text) {
 }
 
 slava::Stats* slava::Character::getStats() {
+    //std::cout<<"VADIM STATS1 "<<stats->level << " " << stats->sp << "\n";
+    //std::cout<<"VADIM STATS2 "<<stats->level << " " << stats->sp << "\n";
 	return stats;
 }
 
@@ -72,11 +200,21 @@ sf::Sprite* slava::Character::getSprite() {
 	return this->sprite;
 }
 
-void slava::Character::setStats(Stats* stats) {
-	if (this->stats != NULL) {
-		delete this->stats;
-	}
-	this->stats = stats;
+void slava::Character::setStats(Stats* _stats) {
+	//if (this->stats != NULL) {
+	//	delete this->stats;
+	//}
+	stats->acceleration=_stats->acceleration;
+	stats->endurance=_stats->endurance;
+	stats->gold=_stats->gold;
+	stats->health=_stats->health;
+	stats->hit=_stats->hit;
+	stats->level=_stats->level;
+	stats->limit=_stats->limit;
+	stats->mana=_stats->mana;
+	stats->mana_timer=_stats->mana_timer;
+	stats->sp=_stats->sp;
+	stats->strength=_stats->strength;
 }
 
 void slava::Character::setController(IController* controller) {
@@ -233,12 +371,7 @@ void slava::Character::updateAnimation(int n) {
 	animations[n].update();
 }
 
-slava::Position slava::Character::getPositionOnTile(int tileSize) {
-	Position p;
-	p.x = this->sprite->getPosition().x / tileSize;
-	p.y = this->sprite->getPosition().y / tileSize;
-	return p;
-}
+
 
 void slava::Character::setMap(Map* map) {
 	mapIsSet = true;
@@ -327,9 +460,11 @@ void slava::Character::addItem(int item) {
 	for (int i = 0; i < inventory.size(); ++i) {
 		if (!inventory[i]) {
 			inventory[i] = item;
+			std::cout<<"DODAJEM HP\n";
 			return;
 		}
 	}
+	inventory.push_back(item);
 }
 
 void slava::Character::removeItem(int index) {
@@ -367,4 +502,10 @@ void slava::Character::stopMovement() {
 	stopUp();
 	stopLeft();
 	stopRight();
+}
+
+bool slava::Character::canAddItem() {
+    int cnt=0;
+    for(int i=0;i<inventory.size();i++)if(inventory[i]==0)cnt++;
+    return cnt>0;
 }
