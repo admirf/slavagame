@@ -31,6 +31,8 @@ namespace slava
 		std::shared_ptr<DialogNode> currentDialog;
 		std::vector<const char*> toBeRemoved;
 		std::vector<const char*> triggersToBeRemoved;
+		sf::Sprite cursor;
+		bool cursorSet = false;
 
 		Items* items;
 
@@ -80,6 +82,7 @@ namespace slava
 		void restart();
 		void pause();
 		void unpause();
+		void setCursor(TexturePtr);
 		sf::RenderWindow* getWindow();
 		Notification* getNotification();
 	};

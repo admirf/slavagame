@@ -12,6 +12,12 @@ void slava::GameWorld::setMainCharacter(CharacterPtr character) {
 	isSet[0] = true;
 }
 
+void slava::GameWorld::setCursor(TexturePtr txt) {
+    cursorSet = true;
+    window->setMouseCursorVisible(false);
+    cursor.setTexture(*txt);
+}
+
 void slava::GameWorld::addCharacter(CharacterPtr character) {
 	characters.insert(std::make_pair(character->getID(), character));
 	// characters[character->getID()] = character;
@@ -265,6 +271,13 @@ void slava::GameWorld::update() {
 	for (auto& view : views) {
 		if(view.second->active)
 			{view.second->draw(*this->window);}
+	}
+
+	if(cursorSet) {
+        auto coords = sf::Mouse::getPosition(*window);
+        auto worldCoords = window->mapPixelToCoords(coords);
+        cursor.setPosition(worldCoords);
+        window->draw(cursor);
 	}
 
 	// postavljamo prozor na nas view (zbog kamere)

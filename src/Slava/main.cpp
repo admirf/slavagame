@@ -100,6 +100,7 @@ int main()
 	srand(static_cast<unsigned>(time(0)));
 	// Resursi
 	auto txt = loadTexture("tileset1.png");
+	auto cursor = loadTexture("pointer.png");
 	auto font = loadFont("Marlboro.ttf");
 	auto item_tileset = loadTexture("inventory_tile_set.png");
 	// Prozor
@@ -410,6 +411,7 @@ int main()
 	world->setItems(&items);
 	world->addTrigger(&trigger);
 	world->addTrigger(&gameOverTrigger);
+	world->setCursor(cursor);
 	string over = "Game over. Press space to play again.";
 
 	//Load random jokes
